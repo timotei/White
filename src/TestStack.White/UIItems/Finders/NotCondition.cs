@@ -1,5 +1,6 @@
 using System.Runtime.Serialization;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Conditions;
 
 namespace TestStack.White.UIItems.Finders
 {
@@ -17,9 +18,9 @@ namespace TestStack.White.UIItems.Finders
             this.condition = condition;
         }
 
-        public override Condition AutomationCondition
+        public override ConditionBase AutomationCondition
         {
-            get { return new System.Windows.Automation.NotCondition(condition.AutomationCondition); }
+            get { return new FlaUI.Core.Conditions.NotCondition(condition.AutomationCondition); }
         }
 
         public override bool Satisfies(AutomationElement element)

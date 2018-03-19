@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Exceptions;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.ListBoxItems;
 using TestStack.White.Utility;

@@ -1,5 +1,6 @@
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.UIItems;
 
 namespace TestStack.White.Mappings
@@ -151,7 +152,7 @@ namespace TestStack.White.Mappings
             return
                 string.Format(
                     "TestControlType: {0}, ControlType: {1}, ClassName: {2}, IdentifiedByClassName: {3}, IsPrimary: {4}, IsExcluded: {5}, FrameworkId: {6}, HasPrimaryChildren: {7}, IsIdentifiedByName: {8}",
-                    testControlType.Name, controlType.LocalizedControlType, className, identifiedByClassName, isPrimary, isExcluded, frameworkId, hasPrimaryChildren,
+                    testControlType.Name, controlType, className, identifiedByClassName, isPrimary, isExcluded, frameworkId, hasPrimaryChildren,
                     IsIdentifiedByName);
         }
     }

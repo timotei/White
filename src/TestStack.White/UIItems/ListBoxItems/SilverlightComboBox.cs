@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.UIItems.Scrolling;
 
@@ -25,7 +26,7 @@ namespace TestStack.White.UIItems.ListBoxItems
                 var bounds = Bounds;
                 var firstVisibleItem = Items.First(i=>!i.IsOffScreen).Bounds;
                 var lastItem = Items.Last(i=>i.Bounds != Rect.Empty).Bounds;
-                var verticalViewSize = scrollPattern.Current.VerticalViewSize;
+                var verticalViewSize = scrollPattern.VerticalViewSize;
                 var calculator = new SilverlightComboBoxVerticalSpanCalculator(bounds, firstVisibleItem, lastItem, verticalViewSize);
                 return calculator.VerticalSpan;
             }

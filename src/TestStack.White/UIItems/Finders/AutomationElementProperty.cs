@@ -1,5 +1,7 @@
+using FlaUI.Core;
+using FlaUI.Core.Conditions;
 using System.Runtime.Serialization;
-using System.Windows.Automation;
+using FlaUI.Core.Identifiers;
 
 namespace TestStack.White.UIItems.Finders
 {
@@ -10,14 +12,14 @@ namespace TestStack.White.UIItems.Finders
         [DataMember]
         private readonly string displayName;
         [DataMember]
-        private readonly AutomationProperty propertyType;
+        private readonly PropertyId propertyType;
 
         //required for xstream
         protected AutomationElementProperty()
         {
         }
 
-        public AutomationElementProperty(object value, string displayName, AutomationProperty propertyType)
+        public AutomationElementProperty(object value, string displayName, PropertyId propertyType)
         {
             Value = value;
             this.displayName = displayName;
@@ -37,7 +39,7 @@ namespace TestStack.White.UIItems.Finders
             get { return displayName; }
         }
 
-        public virtual Condition PropertyCondition
+        public virtual ConditionBase PropertyCondition
         {
             get { return new PropertyCondition(propertyType, Value); }
         }
@@ -45,7 +47,7 @@ namespace TestStack.White.UIItems.Finders
         private bool Equals(AutomationElementProperty other)
         {
             return Equals(other.Value, Value) && Equals(other.propertyType.Id, propertyType.Id) &&
-                   Equals(other.propertyType.ProgrammaticName, other.propertyType.ProgrammaticName);
+                   Equals(other.propertyType.Name, propertyType.Name);
         }
 
         public override bool Equals(object obj)

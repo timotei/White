@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using Castle.DynamicProxy;
+using FlaUI.Core.Definitions;
 using TestStack.White.Configuration;
 using TestStack.White.Factory;
 using TestStack.White.InputDevices;
@@ -112,7 +113,7 @@ namespace TestStack.White.UIItems
                 var uiItem = Retry.For(() =>
                     CurrentContainerItemFactory.Find(searchCriteria, WindowSession),
                     b =>
-                        (bool) b.AutomationElement.GetCurrentPropertyValue(AutomationElement.IsOffscreenProperty, false),
+                        (bool) b.AutomationElement.Properties.IsOffscreen.Value == false,
                     busyTimeout);
 
                 if (uiItem == null)

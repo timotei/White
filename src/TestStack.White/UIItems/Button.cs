@@ -1,4 +1,5 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.Recording;
 using TestStack.White.UIItems.Actions;
 

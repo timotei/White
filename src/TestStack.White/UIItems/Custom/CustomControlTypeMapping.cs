@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.Definitions;
 
 namespace TestStack.White.UIItems.Custom
 {
@@ -11,45 +11,45 @@ namespace TestStack.White.UIItems.Custom
 
         static CustomControlTypeMapping()
         {
-            Mappings[CustomUIItemType.Pane] = System.Windows.Automation.ControlType.Pane;
-            Mappings[CustomUIItemType.Custom] = System.Windows.Automation.ControlType.Custom;
-            Mappings[CustomUIItemType.Group] = System.Windows.Automation.ControlType.Group;
-            Mappings[CustomUIItemType.Window] = System.Windows.Automation.ControlType.Window;
-            Mappings[CustomUIItemType.Table] = System.Windows.Automation.ControlType.Table;
-            Mappings[CustomUIItemType.Button] = System.Windows.Automation.ControlType.Button;
-            Mappings[CustomUIItemType.Calendar] = System.Windows.Automation.ControlType.Calendar;
-            Mappings[CustomUIItemType.CheckBox] = System.Windows.Automation.ControlType.CheckBox;
-            Mappings[CustomUIItemType.ComboBox] = System.Windows.Automation.ControlType.ComboBox;
-            Mappings[CustomUIItemType.DataGrid] = System.Windows.Automation.ControlType.DataGrid;
-            Mappings[CustomUIItemType.DataItem] = System.Windows.Automation.ControlType.DataItem;
-            Mappings[CustomUIItemType.Document] = System.Windows.Automation.ControlType.Document;
-            Mappings[CustomUIItemType.Edit] = System.Windows.Automation.ControlType.Edit;
-            Mappings[CustomUIItemType.Header] = System.Windows.Automation.ControlType.Header;
-            Mappings[CustomUIItemType.HeaderItem] = System.Windows.Automation.ControlType.HeaderItem;
-            Mappings[CustomUIItemType.Hyperlink] = System.Windows.Automation.ControlType.Hyperlink;
-            Mappings[CustomUIItemType.Image] = System.Windows.Automation.ControlType.Image;
-            Mappings[CustomUIItemType.List] = System.Windows.Automation.ControlType.List;
-            Mappings[CustomUIItemType.ListItem] = System.Windows.Automation.ControlType.ListItem;
-            Mappings[CustomUIItemType.Menu] = System.Windows.Automation.ControlType.Menu;
-            Mappings[CustomUIItemType.MenuBar] = System.Windows.Automation.ControlType.MenuBar;
-            Mappings[CustomUIItemType.MenuItem] = System.Windows.Automation.ControlType.MenuItem;
-            Mappings[CustomUIItemType.ProgressBar] = System.Windows.Automation.ControlType.ProgressBar;
-            Mappings[CustomUIItemType.RadioButton] = System.Windows.Automation.ControlType.RadioButton;
-            Mappings[CustomUIItemType.ScrollBar] = System.Windows.Automation.ControlType.ScrollBar;
-            Mappings[CustomUIItemType.Separator] = System.Windows.Automation.ControlType.Separator;
-            Mappings[CustomUIItemType.Slider] = System.Windows.Automation.ControlType.Slider;
-            Mappings[CustomUIItemType.Spinner] = System.Windows.Automation.ControlType.Spinner;
-            Mappings[CustomUIItemType.SplitButton] = System.Windows.Automation.ControlType.SplitButton;
-            Mappings[CustomUIItemType.StatusBar] = System.Windows.Automation.ControlType.StatusBar;
-            Mappings[CustomUIItemType.Tab] = System.Windows.Automation.ControlType.Tab;
-            Mappings[CustomUIItemType.TabItem] = System.Windows.Automation.ControlType.TabItem;
-            Mappings[CustomUIItemType.Text] = System.Windows.Automation.ControlType.Text;
-            Mappings[CustomUIItemType.Thumb] = System.Windows.Automation.ControlType.Thumb;
-            Mappings[CustomUIItemType.TitleBar] = System.Windows.Automation.ControlType.TitleBar;
-            Mappings[CustomUIItemType.ToolBar] = System.Windows.Automation.ControlType.ToolBar;
-            Mappings[CustomUIItemType.ToolTip] = System.Windows.Automation.ControlType.ToolTip;
-            Mappings[CustomUIItemType.Tree] = System.Windows.Automation.ControlType.Tree;
-            Mappings[CustomUIItemType.TreeItem] = System.Windows.Automation.ControlType.TreeItem;
+            Mappings[CustomUIItemType.Pane] = FlaUI.Core.Definitions.ControlType.Pane;
+            Mappings[CustomUIItemType.Custom] = FlaUI.Core.Definitions.ControlType.Custom;
+            Mappings[CustomUIItemType.Group] = FlaUI.Core.Definitions.ControlType.Group;
+            Mappings[CustomUIItemType.Window] = FlaUI.Core.Definitions.ControlType.Window;
+            Mappings[CustomUIItemType.Table] = FlaUI.Core.Definitions.ControlType.Table;
+            Mappings[CustomUIItemType.Button] = FlaUI.Core.Definitions.ControlType.Button;
+            Mappings[CustomUIItemType.Calendar] = FlaUI.Core.Definitions.ControlType.Calendar;
+            Mappings[CustomUIItemType.CheckBox] = FlaUI.Core.Definitions.ControlType.CheckBox;
+            Mappings[CustomUIItemType.ComboBox] = FlaUI.Core.Definitions.ControlType.ComboBox;
+            Mappings[CustomUIItemType.DataGrid] = FlaUI.Core.Definitions.ControlType.DataGrid;
+            Mappings[CustomUIItemType.DataItem] = FlaUI.Core.Definitions.ControlType.DataItem;
+            Mappings[CustomUIItemType.Document] = FlaUI.Core.Definitions.ControlType.Document;
+            Mappings[CustomUIItemType.Edit] = FlaUI.Core.Definitions.ControlType.Edit;
+            Mappings[CustomUIItemType.Header] = FlaUI.Core.Definitions.ControlType.Header;
+            Mappings[CustomUIItemType.HeaderItem] = FlaUI.Core.Definitions.ControlType.HeaderItem;
+            Mappings[CustomUIItemType.Hyperlink] = FlaUI.Core.Definitions.ControlType.Hyperlink;
+            Mappings[CustomUIItemType.Image] = FlaUI.Core.Definitions.ControlType.Image;
+            Mappings[CustomUIItemType.List] = FlaUI.Core.Definitions.ControlType.List;
+            Mappings[CustomUIItemType.ListItem] = FlaUI.Core.Definitions.ControlType.ListItem;
+            Mappings[CustomUIItemType.Menu] = FlaUI.Core.Definitions.ControlType.Menu;
+            Mappings[CustomUIItemType.MenuBar] = FlaUI.Core.Definitions.ControlType.MenuBar;
+            Mappings[CustomUIItemType.MenuItem] = FlaUI.Core.Definitions.ControlType.MenuItem;
+            Mappings[CustomUIItemType.ProgressBar] = FlaUI.Core.Definitions.ControlType.ProgressBar;
+            Mappings[CustomUIItemType.RadioButton] = FlaUI.Core.Definitions.ControlType.RadioButton;
+            Mappings[CustomUIItemType.ScrollBar] = FlaUI.Core.Definitions.ControlType.ScrollBar;
+            Mappings[CustomUIItemType.Separator] = FlaUI.Core.Definitions.ControlType.Separator;
+            Mappings[CustomUIItemType.Slider] = FlaUI.Core.Definitions.ControlType.Slider;
+            Mappings[CustomUIItemType.Spinner] = FlaUI.Core.Definitions.ControlType.Spinner;
+            Mappings[CustomUIItemType.SplitButton] = FlaUI.Core.Definitions.ControlType.SplitButton;
+            Mappings[CustomUIItemType.StatusBar] = FlaUI.Core.Definitions.ControlType.StatusBar;
+            Mappings[CustomUIItemType.Tab] = FlaUI.Core.Definitions.ControlType.Tab;
+            Mappings[CustomUIItemType.TabItem] = FlaUI.Core.Definitions.ControlType.TabItem;
+            Mappings[CustomUIItemType.Text] = FlaUI.Core.Definitions.ControlType.Text;
+            Mappings[CustomUIItemType.Thumb] = FlaUI.Core.Definitions.ControlType.Thumb;
+            Mappings[CustomUIItemType.TitleBar] = FlaUI.Core.Definitions.ControlType.TitleBar;
+            Mappings[CustomUIItemType.ToolBar] = FlaUI.Core.Definitions.ControlType.ToolBar;
+            Mappings[CustomUIItemType.ToolTip] = FlaUI.Core.Definitions.ControlType.ToolTip;
+            Mappings[CustomUIItemType.Tree] = FlaUI.Core.Definitions.ControlType.Tree;
+            Mappings[CustomUIItemType.TreeItem] = FlaUI.Core.Definitions.ControlType.TreeItem;
         }
 
         public static ControlType ControlType(CustomUIItemType customUIItemType)

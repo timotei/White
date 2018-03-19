@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.UIA;
 using TestStack.White.UIItems.Actions;
 

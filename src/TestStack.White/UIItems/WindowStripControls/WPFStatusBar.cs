@@ -1,5 +1,5 @@
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.UIItems.Finders;
 
@@ -15,7 +15,7 @@ namespace TestStack.White.UIItems.WindowStripControls
             get
             {
                 var uiItemCollection = factory.CreateAll(SearchCriteria.All, actionListener)
-                    .Where(i=>i.AutomationElement.Current.ClassName == "StatusBarItem");
+                    .Where(i=>i.AutomationElement.ClassName == "StatusBarItem");
                 return new UIItemCollection(uiItemCollection);
             }
         }

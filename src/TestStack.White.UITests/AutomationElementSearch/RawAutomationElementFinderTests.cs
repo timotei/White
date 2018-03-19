@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.Definitions;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems;

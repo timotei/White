@@ -1,12 +1,15 @@
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Conditions;
 using System.Collections.Generic;
-using System.Windows.Automation;
 
 namespace TestStack.White.AutomationElementSearch
 {
     public interface IDescendantFinder
     {
         AutomationElement Descendant(AutomationSearchCondition automationSearchCondition);
-        AutomationElement Descendant(Condition condition);
+
+        AutomationElement Descendant(ConditionBase condition);
+
         List<AutomationElement> Descendants(AutomationSearchCondition automationSearchCondition);
     }
 }

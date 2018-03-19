@@ -5,7 +5,14 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.EventHandlers;
+using FlaUI.Core.Identifiers;
+using FlaUI.Core.Patterns.Infrastructure;
+using FlaUI.UIA3.Identifiers;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Configuration;
 using TestStack.White.Factory;
@@ -20,6 +27,7 @@ using TestStack.White.UIItems.WindowItems;
 using TestStack.White.WindowsAPI;
 using Action = TestStack.White.UIItems.Actions.Action;
 using Point = System.Windows.Point;
+using Window = TestStack.White.UIItems.WindowItems.Window;
 
 namespace TestStack.White.UIItems
 {
@@ -36,7 +44,7 @@ namespace TestStack.White.UIItems
         internal readonly Keyboard keyboard = Keyboard.Instance;
         protected IScrollBars scrollBars;
         private static readonly ScreenCapture ScreenCapture = new ScreenCapture();
-        private AutomationEventHandler handler;
+        private IAutomationEventHandler handler;
         protected readonly ILogger Logger = CoreAppXmlConfiguration.Instance.LoggerFactory.Create(typeof(UIItem));
 
         #endregion
@@ -72,7 +80,7 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual WindowsFramework Framework
         {
-            get { return WindowsFrameworkExtensions.FromFrameworkId(automationElement.Current.FrameworkId); }
+            get { return WindowsFrameworkExtensions.FromFrameworkId(automationElement.FrameworkType.ToString()); }
         }
 
         /// <summary>
@@ -102,7 +110,7 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual bool Enabled
         {
-            get { return automationElement.Current.IsEnabled; }
+            get { return automationElement.IsEnabled; }
         }
 
         /// <summary>
@@ -110,7 +118,7 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual bool IsOffScreen
         {
-            get { return automationElement.Current.IsOffscreen; }
+            get { return automationElement.IsOffscreen; }
         }
 
         /// <summary>
@@ -118,7 +126,7 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual bool Visible
         {
-            get { return !automationElement.Current.IsOffscreen; }
+            get { return !automationElement.IsOffscreen; }
         }
 
         /// <summary>
@@ -126,13 +134,13 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual bool IsFocussed
         {
-            get { return automationElement.Current.HasKeyboardFocus; }
+            get { return automationElement.Properties.HasKeyboardFocus; }
         }
 
         /// <summary>
         /// Implements <see cref="IUIItem.ItemStatus"/>
         /// </summary>
-        public virtual string ItemStatus { get { return automationElement.Current.ItemStatus; } }
+        public virtual string ItemStatus { get { return automationElement.ItemStatus; } }
 
         /// <summary>
         /// Implements <see cref="IUIItem.Name"/>
@@ -143,11 +151,11 @@ namespace TestStack.White.UIItems
             {
                 try
                 {
-                    return automationElement.Current.Name;
+                    return automationElement.Name;
                 }
                 catch (InvalidOperationException)
                 {
-                    return automationElement.Current.Name;
+                    return automationElement.Name;
                 }
             }
         }
@@ -157,7 +165,7 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual string Id
         {
-            get { return automationElement.Current.AutomationId; }
+            get { return automationElement.AutomationId; }
         }
 
         /// <summary>
@@ -165,20 +173,20 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual string PrimaryIdentification
         {
-            get { return automationElement.Current.FrameworkId.Equals(WindowsFramework.Win32.FrameworkId()) ? Name : Id; }
+            get { return automationElement.FrameworkType == FrameworkType.Win32 ? Name : Id; }
         }
 
         /// <summary>
         /// Implements <see cref="IUIItem.HelpText"/>
         /// </summary>
-        public virtual string HelpText { get { return automationElement.Current.HelpText; } }
+        public virtual string HelpText { get { return automationElement.HelpText; } }
 
         /// <summary>
         /// Implements <see cref="IUIItem.AccessKey"/>
         /// </summary>
         public virtual string AccessKey
         {
-            get { return automationElement.Current.AccessKey; }
+            get { return automationElement.Properties.AccessKey; }
         }
 
         /// <summary>
@@ -198,7 +206,7 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual Point Location
         {
-            get { return automationElement.Current.BoundingRectangle.TopLeft; }
+            get { return new Point(automationElement.BoundingRectangle.Left, automationElement.BoundingRectangle.Top); }
         }
 
         /// <summary>
@@ -206,7 +214,7 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual Rect Bounds
         {
-            get { return automationElement.Current.BoundingRectangle; }
+            get { return automationElement.BoundingRectangle; }
         }
 
         /// <summary>
@@ -214,7 +222,7 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual Point ClickablePoint
         {
-            get { return (Point)Property(AutomationElement.ClickablePointProperty); }
+            get { return automationElement.Properties.ClickablePoint.Value; }
         }
         #endregion
 
@@ -235,13 +243,13 @@ namespace TestStack.White.UIItems
         {
             get
             {
-                if (automationElement.Current.NativeWindowHandle == 0)
+                if (automationElement.Properties.NativeWindowHandle == IntPtr.Zero)
                 {
                     // In wpf controls does not have window handles, falling back to screencapture.
                     return ScreenCapture.CaptureArea(Bounds);
                 }
 
-                var displayedItem = new DisplayedItem(new IntPtr(automationElement.Current.NativeWindowHandle));
+                var displayedItem = new DisplayedItem(automationElement.Properties.NativeWindowHandle);
                 using (System.Drawing.Image image = displayedItem.GetVisibleImage())
                     return new Bitmap(image);
             }
@@ -260,7 +268,7 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual void DrawHighlight(Color color)
         {
-            var rectangle = AutomationElement.Current.BoundingRectangle;
+            var rectangle = AutomationElement.BoundingRectangle;
             if (rectangle != Rect.Empty)
             {
                 new Drawing.FrameRectangle(color, rectangle).Highlight();
@@ -287,7 +295,7 @@ namespace TestStack.White.UIItems
             actionListener.ActionPerforming(this);
             try
             {
-                automationElement.SetFocus();
+                automationElement.Focus();
                 ActionPerformed();
             }
             catch
@@ -301,7 +309,7 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual void SetForeground()
         {
-            NativeWindow.SetForegroundWindow(new IntPtr(automationElement.Current.NativeWindowHandle));
+            NativeWindow.SetForegroundWindow(automationElement.Properties.NativeWindowHandle);
         }
 
         /// <summary>
@@ -317,7 +325,8 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual void Invoke()
         {
-            var invokePattern = (InvokePattern)Pattern(InvokePattern.Pattern);
+            var invokePattern = automationElement.Patterns.Invoke.PatternOrDefault;
+
             if (invokePattern != null) invokePattern.Invoke();
         }
 
@@ -377,7 +386,8 @@ namespace TestStack.White.UIItems
         /// </summary>
         public virtual void Enter(string value)
         {
-            var pattern = Pattern(ValuePattern.Pattern) as ValuePattern;
+            var pattern = automationElement.Patterns.Value.PatternOrDefault;
+
             if (pattern != null) pattern.SetValue(string.Empty);
             if (string.IsNullOrEmpty(value)) return;
 
@@ -413,11 +423,11 @@ namespace TestStack.White.UIItems
         public virtual string ErrorProviderMessage(Window window)
         {
             var element =
-                AutomationElement.FromPoint(automationElement.Current.BoundingRectangle.ImmediateExteriorEast());
+                Desktop.Automation.FromPoint(automationElement.BoundingRectangle.ImmediateExteriorEast);
             if (element == null) return null;
-            var errorProviderBounds = element.Current.BoundingRectangle;
-            if (automationElement.Current.BoundingRectangle.Right != errorProviderBounds.Left) return null;
-            mouse.Location = errorProviderBounds.Center();
+            var errorProviderBounds = element.BoundingRectangle;
+            if (automationElement.BoundingRectangle.Right != errorProviderBounds.Left) return null;
+            mouse.Location = errorProviderBounds.Center;
             actionListener.ActionPerformed(Action.WindowMessage);
             return window.ToolTip.Text;
         }
@@ -440,14 +450,6 @@ namespace TestStack.White.UIItems
         public virtual bool NameMatches(string text)
         {
             return Name.Equals(text);
-        }
-
-        /// <summary>
-        /// Implements <see cref="IUIItem.ValueOfEquals"/>
-        /// </summary>
-        public virtual bool ValueOfEquals(AutomationProperty property, object compareTo)
-        {
-            return Property(property).Equals(compareTo);
         }
 
         /// <summary>
@@ -549,34 +551,21 @@ namespace TestStack.White.UIItems
 
         protected virtual void HookClickEvent(IUIItemEventListener eventListener)
         {
-            handler = delegate { eventListener.EventOccured(new UIItemClickEvent(this)); };
-            Automation.AddAutomationEventHandler(InvokePattern.InvokedEvent, automationElement, TreeScope.Element,
-                                                 handler);
+            handler = automationElement.RegisterEvent(InvokePattern.InvokedEvent, TreeScope.Element, delegate { eventListener.EventOccured(new UIItemClickEvent(this)); });
         }
 
         protected virtual void UnHookClickEvent()
         {
-            Automation.RemoveAutomationEventHandler(InvokePattern.InvokedEvent, automationElement, handler);
+            automationElement.RemoveAutomationEventHandler(
+                InvokePattern.InvokedEvent, handler);
         }
 
-        protected virtual object Property(AutomationProperty automationProperty)
+        protected virtual object Property(PropertyId automationProperty)
         {
-            return automationElement.GetCurrentPropertyValue(automationProperty);
+            return automationElement.BasicAutomationElement.GetPropertyValue(automationProperty);
         }
 
-        protected virtual T Pattern<T>()
-        {
-            var fieldInfo = typeof(T).GetField("Pattern", BindingFlags.Static | BindingFlags.Public);
-            var pattern = (AutomationPattern)fieldInfo.GetValue(null);
-            object patternObject;
-            if (automationElement.TryGetCurrentPattern(pattern, out patternObject))
-            {
-                return (T)patternObject;
-            }
-            return (T)(object)null;
-        }
-
-        protected virtual BasePattern Pattern(AutomationPattern pattern)
+        protected virtual IPattern Pattern(PatternId pattern)
         {
             return Pattern(AutomationElement, pattern);
         }
@@ -585,18 +574,18 @@ namespace TestStack.White.UIItems
 
         #region Internal
 
-        internal static BasePattern Pattern(AutomationElement automationElement, AutomationPattern pattern)
+        internal static IPattern Pattern(AutomationElement automationElement, PatternId pattern)
         {
             object patternObject;
-            if (automationElement.TryGetCurrentPattern(pattern, out patternObject))
+            if (automationElement.BasicAutomationElement.TryGetNativePattern(pattern, out patternObject))
             {
-                return (BasePattern)patternObject;
+                return (IPattern)patternObject;
             }
             return null;
         }
 
         #endregion
-        
+
         #region Private
 
         private void PerformIfValid(System.Action action)

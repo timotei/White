@@ -1,5 +1,6 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.InputDevices;
+using TestStack.White.Recording;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.ListViewItems;
 using TestStack.White.Utility;

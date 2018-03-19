@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Factory;
 using TestStack.White.Mappings;
@@ -32,10 +32,10 @@ namespace TestStack.White.Finder
             ControlDictionary controlDictionary = ControlDictionary.Instance;
             foreach (AutomationElement child in children)
             {
-                if (!controlDictionary.IsControlTypeSupported(child.Current.ControlType)) continue;
-                if (controlDictionary.IsPrimaryControl(child.Current.ControlType, child.Current.ClassName, null)) list.Add(child);
-                if (!controlDictionary.HasPrimaryChildren(child.Current.ControlType)) continue;
-                if (!controlDictionary.IsExcluded(child.Current.ControlType)) FindAll(child);
+                if (!controlDictionary.IsControlTypeSupported(child.ControlType)) continue;
+                if (controlDictionary.IsPrimaryControl(child.ControlType, child.ClassName, null)) list.Add(child);
+                if (!controlDictionary.HasPrimaryChildren(child.ControlType)) continue;
+                if (!controlDictionary.IsExcluded(child.ControlType)) FindAll(child);
             }
         }
 

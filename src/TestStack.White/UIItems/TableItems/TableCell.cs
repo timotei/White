@@ -1,4 +1,5 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.WindowsAPI;

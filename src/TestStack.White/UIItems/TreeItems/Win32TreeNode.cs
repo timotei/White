@@ -1,5 +1,5 @@
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.UIA;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.WindowsAPI;
@@ -30,7 +30,7 @@ namespace TestStack.White.UIItems.TreeItems
 
         protected override Point SelectPoint
         {
-            get { return automationElement.Current.BoundingRectangle.Center(); }
+            get { return automationElement.BoundingRectangle.Center; }
         }
     }
 }

@@ -1,5 +1,7 @@
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.UIA3.Patterns;
 
 namespace TestStack.White.UIItems
 {
@@ -11,7 +13,7 @@ namespace TestStack.White.UIItems
 
         public virtual ToggleState State
         {
-            get { return (ToggleState) Property(TogglePattern.ToggleStateProperty); }
+            get { return AutomationElement.Patterns.Toggle.PatternOrDefault.ToggleState; }
             set
             {
                 for (int i = 0; i < Enum.GetNames(typeof (ToggleState)).Length; i++)
@@ -25,7 +27,7 @@ namespace TestStack.White.UIItems
 
         public virtual void Toggle()
         {
-            var pattern = (TogglePattern) Pattern(TogglePattern.Pattern);
+            var pattern = AutomationElement.Patterns.Toggle.PatternOrDefault; 
             pattern.Toggle();
         }
     }

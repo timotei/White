@@ -1,4 +1,6 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.UIA3.Identifiers;
 using NUnit.Framework;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
@@ -35,11 +37,11 @@ namespace TestStack.White.UnitTests.UIItems.Finders
             Assert.That(SearchCriteria.ByAutomationId("foo").AndByText("bar"), Is.EqualTo(SearchCriteria.ByAutomationId("foo").AndByText("bar")));
             Assert.That(SearchCriteria.ByAutomationId("foo").AndByText("bar"), Is.EqualTo(SearchCriteria.ByText("bar").AndAutomationId("foo")));
             //ByNativePropertyTests...
-            Assert.That(SearchCriteria.ByNativeProperty(AutomationElement.NameProperty, "blah"), Is.EqualTo(SearchCriteria.ByNativeProperty(AutomationElement.NameProperty, "blah")));
-            Assert.That(SearchCriteria.ByNativeProperty(AutomationElement.NameProperty, "blah"), Is.Not.EqualTo(SearchCriteria.ByNativeProperty(AutomationElement.NameProperty, "blah1")));
-            Assert.That(SearchCriteria.ByNativeProperty(AutomationElement.IsControlElementProperty, true), Is.EqualTo(SearchCriteria.ByNativeProperty(AutomationElement.IsControlElementProperty, true)));
-            Assert.That(SearchCriteria.ByNativeProperty(AutomationElement.IsControlElementProperty, true), Is.Not.EqualTo(SearchCriteria.ByNativeProperty(AutomationElement.IsControlElementProperty, false)));
-            Assert.That(SearchCriteria.ByNativeProperty(AutomationElement.IsControlElementProperty, true), Is.Not.EqualTo(SearchCriteria.ByNativeProperty(AutomationElement.IsDockPatternAvailableProperty, true)));
+            Assert.That(SearchCriteria.ByNativeProperty(AutomationObjectIds.NameProperty, "blah"), Is.EqualTo(SearchCriteria.ByNativeProperty(AutomationObjectIds.NameProperty, "blah")));
+            Assert.That(SearchCriteria.ByNativeProperty(AutomationObjectIds.NameProperty, "blah"), Is.Not.EqualTo(SearchCriteria.ByNativeProperty(AutomationObjectIds.NameProperty, "blah1")));
+            Assert.That(SearchCriteria.ByNativeProperty(AutomationObjectIds.IsControlElementProperty, true), Is.EqualTo(SearchCriteria.ByNativeProperty(AutomationObjectIds.IsControlElementProperty, true)));
+            Assert.That(SearchCriteria.ByNativeProperty(AutomationObjectIds.IsControlElementProperty, true), Is.Not.EqualTo(SearchCriteria.ByNativeProperty(AutomationObjectIds.IsControlElementProperty, false)));
+            Assert.That(SearchCriteria.ByNativeProperty(AutomationObjectIds.IsControlElementProperty, true), Is.Not.EqualTo(SearchCriteria.ByNativeProperty(AutomationObjectIds.IsDockPatternAvailableProperty, true)));
         }
 
         [Test]
@@ -48,8 +50,8 @@ namespace TestStack.White.UnitTests.UIItems.Finders
             Assert.That(SearchCriteria.ByText("bar").AndAutomationId("foo").ToString(), Is.EqualTo("AutomationId=foo,Name=bar"));
             Assert.That(SearchCriteria.ByText("bar").AndAutomationId("foo").AndIndex(1).ToString(), Is.EqualTo("AutomationId=foo,Name=bar,Index=1"));
             //ByNativePropertyTests...
-            Assert.That(SearchCriteria.ByNativeProperty(AutomationElement.NameProperty, "blah").ToString(), Is.EqualTo("AutomationElementIdentifiers.NameProperty=blah"));
-            Assert.That(SearchCriteria.ByNativeProperty(AutomationElement.IsControlElementProperty, true).ToString(), Is.EqualTo("AutomationElementIdentifiers.IsControlElementProperty=True"));
+            Assert.That(SearchCriteria.ByNativeProperty(AutomationObjectIds.NameProperty, "blah").ToString(), Is.EqualTo("AutomationElementIdentifiers.NameProperty=blah"));
+            Assert.That(SearchCriteria.ByNativeProperty(AutomationObjectIds.IsControlElementProperty, true).ToString(), Is.EqualTo("AutomationElementIdentifiers.IsControlElementProperty=True"));
         }
     }
 }

@@ -1,4 +1,7 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.Patterns;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.UIItems.Actions;
 
@@ -18,19 +21,19 @@ namespace TestStack.White.UIItems
         {
             get
             {
-                ValuePattern valuePattern = GetValuePattern();
-                string value = valuePattern.Current.Value;
+                IValuePattern valuePattern = GetValuePattern();
+                string value = valuePattern.Value;
                 return double.Parse(value);
             }
             set { GetValuePattern().SetValue(value.ToString()); }
         }
 
-        private ValuePattern GetValuePattern()
+        private IValuePattern GetValuePattern()
         {
             AutomationElement spinnerElementContainingValue =
-                finder.FindChildRaw(AutomationSearchCondition.ByAutomationId(automationElement.Current.AutomationId).OfControlType(ControlType.Spinner));
+                finder.FindChildRaw(AutomationSearchCondition.ByAutomationId(automationElement.AutomationId).OfControlType(ControlType.Spinner));
             if (spinnerElementContainingValue == null) throw new WhiteAssertionException("Could not find Raw Spinner Element containing the value");
-            return (ValuePattern) spinnerElementContainingValue.GetCurrentPattern(ValuePattern.Pattern);
+            return spinnerElementContainingValue.Patterns.Value.PatternOrDefault;
         }
 
         public virtual void Increment()

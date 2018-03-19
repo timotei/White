@@ -1,4 +1,4 @@
-﻿using System.Windows.Automation;
+﻿using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.Factory;
 
 namespace TestStack.White.UIItems
@@ -10,7 +10,7 @@ namespace TestStack.White.UIItems
 
         public static T GetParent<T>(this IUIItem thisItem) where T : IUIItem
         {
-            var parent = TreeWalker.ControlViewWalker.GetParent(thisItem.AutomationElement);
+            var parent = Desktop.Automation.TreeWalkerFactory.GetControlViewWalker().GetParent(thisItem.AutomationElement);
             var uiItem = ItemFactory.Create(parent, thisItem.ActionListener);
             return (T) UIItemProxyFactory.Create(uiItem, uiItem.ActionListener);
         }

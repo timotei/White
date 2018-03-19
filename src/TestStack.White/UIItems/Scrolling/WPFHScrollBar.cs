@@ -1,5 +1,7 @@
+using System;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.UIItems.Actions;
 using Action = TestStack.White.UIItems.Actions.Action;
 
@@ -17,12 +19,12 @@ namespace TestStack.White.UIItems.Scrolling
 
         public override double Value
         {
-            get { return ScrollPattern.Current.HorizontalScrollPercent; }
+            get { return ScrollPattern.HorizontalScrollPercent; }
         }
 
         protected override double ScrollPercentage
         {
-            get { return ScrollPattern.Current.HorizontalViewSize; }
+            get { return ScrollPattern.HorizontalViewSize; }
         }
 
         public override Rect Bounds
@@ -33,8 +35,9 @@ namespace TestStack.White.UIItems.Scrolling
         protected virtual void Scroll(ScrollAmount amount)
         {
             if (!IsScrollable) return;
-            ScrollPattern.ScrollHorizontal(amount);
+            ScrollPattern.Scroll(amount, 0);
             actionListener.ActionPerformed(Action.WindowMessage);
+            throw new InvalidOperationException("Verify the above, we scroll by enum value instead of actula value?");
         }
 
         public virtual void ScrollLeft()
@@ -59,17 +62,17 @@ namespace TestStack.White.UIItems.Scrolling
 
         public virtual bool IsScrollable
         {
-            get { return ScrollPattern.Current.HorizontallyScrollable; }
+            get { return ScrollPattern.HorizontallyScrollable; }
         }
 
         public override void SetToMinimum()
         {
-            ScrollPattern.SetScrollPercent(0, ScrollPattern.Current.VerticalScrollPercent);
+            ScrollPattern.SetScrollPercent(0, ScrollPattern.VerticalScrollPercent);
         }
 
         public override void SetToMaximum()
         {
-            ScrollPattern.SetScrollPercent(100, ScrollPattern.Current.VerticalScrollPercent);
+            ScrollPattern.SetScrollPercent(100, ScrollPattern.VerticalScrollPercent);
         }
     }
 }

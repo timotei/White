@@ -1,6 +1,6 @@
 using System;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.UIItems.Scrolling;
 

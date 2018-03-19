@@ -1,15 +1,17 @@
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Patterns;
+using FlaUI.UIA3.Patterns;
 
 namespace TestStack.White.UIItems.Scrolling
 {
     public abstract class WpfScrollBar : IScrollBar
     {
-        protected readonly ScrollPattern ScrollPattern;
+        protected readonly IScrollPattern ScrollPattern;
 
         protected WpfScrollBar(AutomationElement parent)
         {
-            ScrollPattern = (ScrollPattern) parent.GetCurrentPattern(ScrollPattern.Pattern);
+            ScrollPattern = parent.Patterns.Scroll.PatternOrDefault;
         }
 
         public abstract double Value { get; }

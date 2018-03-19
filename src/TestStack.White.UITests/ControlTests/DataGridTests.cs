@@ -47,7 +47,7 @@ namespace TestStack.White.UITests.ControlTests
             Assert.That(row1.Cells[1].Text, Is.EqualTo("Item1"));
             Assert.That(row1.Cells[2].Text, Does.Contain("Simple"));
             var imgRow = row1.Cells[4];
-            Assert.That(imgRow.AutomationElement.Current.ControlType.ProgrammaticName, Is.EqualTo("ControlType.Image"));
+            Assert.That(imgRow.AutomationElement.ControlType.ToString(), Is.EqualTo("ControlType.Image"));
         }
 
         [Test]

@@ -1,5 +1,6 @@
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using NUnit.Framework;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems;
@@ -30,7 +31,7 @@ namespace TestStack.White.UITests.ControlTests
                 Assert.That(() => { MainWindow.Get<Button>(SearchCriteria.ByAutomationId("foo")); },
                     Throws.TypeOf<AutomationException>().With.
                     Message.EqualTo(String.Format("Failed to get (ControlType={0} or ControlType={1}),AutomationId=foo",
-                        ControlType.Button.LocalizedControlType, ControlType.CheckBox.LocalizedControlType)));
+                        ControlType.Button, ControlType.CheckBox)));
             }
         }
 

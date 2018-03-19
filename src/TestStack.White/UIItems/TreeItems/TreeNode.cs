@@ -1,5 +1,7 @@
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.UIItems.Actions;
 
@@ -22,17 +24,17 @@ namespace TestStack.White.UIItems.TreeItems
 
         public virtual bool IsSelected
         {
-            get { return (bool) Property(SelectionItemPattern.IsSelectedProperty); }
+            get { return AutomationElement.Patterns.SelectionItem.PatternOrDefault.IsSelected; }
         }
 
         public virtual bool IsExpanded()
         {
-            return ValueOfEquals(ExpandCollapsePattern.ExpandCollapseStateProperty, ExpandCollapseState.Expanded);
+            return AutomationElement.Patterns.ExpandCollapse.PatternOrDefault.ExpandCollapseState == ExpandCollapseState.Expanded;
         }
 
         public virtual ExpandCollapseState DisplayState
         {
-            get { return (ExpandCollapseState) Property(ExpandCollapsePattern.ExpandCollapseStateProperty); }
+            get { return AutomationElement.Patterns.ExpandCollapse.PatternOrDefault.ExpandCollapseState; }
         }
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace TestStack.White.UIItems.TreeItems
         /// </summary>
         public virtual bool UnSelect()
         {
-            var pattern = (SelectionItemPattern) Pattern(SelectionItemPattern.Pattern);
+            var pattern = AutomationElement.Patterns.SelectionItem.PatternOrDefault;
             if (pattern != null)
             {
                 pattern.RemoveFromSelection();
@@ -137,7 +139,7 @@ namespace TestStack.White.UIItems.TreeItems
                 if (string.IsNullOrEmpty(value) || value.Contains("System.Windows.Controls.TreeViewItem"))
                 {
                     AutomationElement textElement = finder.Child(AutomationSearchCondition.ByControlType(ControlType.Text));
-                    return textElement == null ? string.Empty : textElement.Current.Name;
+                    return textElement == null ? string.Empty : textElement.Name;
                 }
                 return value;
             }

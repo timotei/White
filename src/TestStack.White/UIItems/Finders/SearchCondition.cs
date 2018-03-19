@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Conditions;
 
 namespace TestStack.White.UIItems.Finders
 {
@@ -17,7 +18,7 @@ namespace TestStack.White.UIItems.Finders
         }
 
         public abstract bool Satisfies(AutomationElement element);
-        public abstract Condition AutomationCondition { get; }
+        public abstract ConditionBase AutomationCondition { get; }
         internal abstract string ToString(string operation);
         protected internal abstract object SearchValue { get; }
 

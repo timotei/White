@@ -1,4 +1,5 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Identifiers;
 using TestStack.White.UIItems.Actions;
 
 namespace TestStack.White.UIItems
@@ -10,7 +11,7 @@ namespace TestStack.White.UIItems
 
         public virtual string Text
         {
-            get { return (string) Property(AutomationElement.NameProperty); }
+            get { return (string) Property(AutomationObjectIds.NameProperty); }
         }
     }
 }

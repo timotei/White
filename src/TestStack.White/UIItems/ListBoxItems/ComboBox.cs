@@ -1,4 +1,7 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.EventHandlers;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Recording;
 using TestStack.White.UIItemEvents;
@@ -9,7 +12,7 @@ namespace TestStack.White.UIItems.ListBoxItems
 {
     public class ComboBox : ListControl
     {
-        private AutomationPropertyChangedEventHandler handler;
+        private IAutomationPropertyChangedEventHandler handler;
         private ListItem lastSelectedItem;
 
         protected ComboBox()
@@ -84,27 +87,26 @@ namespace TestStack.White.UIItems.ListBoxItems
                 return;
             }
             base.Select(index);
-            var p = (ExpandCollapsePattern) this.AutomationElement.GetCurrentPattern(ExpandCollapsePattern.Pattern);
-            if (p.Current.ExpandCollapseState.Equals(ExpandCollapseState.Expanded))
+            var p = (ExpandCollapsePattern) AutomationElement.Patterns.ExpandCollapse.PatternOrDefault;
+            if (p.ExpandCollapseState.Equals(ExpandCollapseState.Expanded))
                 p.Collapse();
         }
 
         public override void HookEvents(IUIItemEventListener eventListener)
         {
             lastSelectedItem = SelectedItem;
-            handler = delegate(object sender, AutomationPropertyChangedEventArgs e)
-                          {
-                              if (SelectedItem == null || e.NewValue.Equals(1)) return;
-                              if (SameListItem()) return;
-                              lastSelectedItem = SelectedItem;
-                              eventListener.EventOccured(new ComboBoxEvent(this, SelectedItemText));
-                          };
-            Automation.AddAutomationPropertyChangedEventHandler(automationElement, TreeScope.Element, handler, ExpandCollapsePattern.ExpandCollapseStateProperty);
+            handler = automationElement.RegisterPropertyChangedEvent(TreeScope.Element, (sender,e, value) => 
+            {
+                if (SelectedItem == null || value.Equals(1)) return;
+                if (SameListItem()) return;
+                lastSelectedItem = SelectedItem;
+                eventListener.EventOccured(new ComboBoxEvent(this, SelectedItemText));
+            }, ExpandCollapsePattern.ExpandCollapseStateProperty);
         }
 
         public override void UnHookEvents()
         {
-            Automation.RemoveAutomationPropertyChangedEventHandler(automationElement, handler);
+            automationElement.RemovePropertyChangedEventHandler(handler);
         }
 
         private bool SameListItem()

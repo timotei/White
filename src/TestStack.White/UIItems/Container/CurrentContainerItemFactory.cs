@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.Factory;
 using TestStack.White.Finder;
 using TestStack.White.Mappings;
@@ -61,7 +61,7 @@ namespace TestStack.White.UIItems.Container
         public virtual List<T> FindAll<T>()
         {
             return ControlDictionary.Instance
-                .GetControlType(typeof (T), automationElement.Current.FrameworkId)
+                .GetControlType(typeof (T), automationElement.Properties.FrameworkId)
                 .SelectMany(ct => current
                     .GetAll(SearchCriteria.ByControlType(ct))
                     .OfType<T>())

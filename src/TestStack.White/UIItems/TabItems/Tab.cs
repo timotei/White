@@ -1,5 +1,8 @@
 using System.Collections.Generic;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.EventHandlers;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Factory;
 using TestStack.White.Recording;
@@ -11,7 +14,7 @@ namespace TestStack.White.UIItems.TabItems
     public class Tab : UIItem
     {
         private TabPages pages;
-        private AutomationPropertyChangedEventHandler handler;
+        private IAutomationPropertyChangedEventHandler handler;
         protected Tab() {}
 
         public Tab(AutomationElement automationElement, IActionListener actionListener) : base(automationElement, actionListener) {}
@@ -61,13 +64,14 @@ namespace TestStack.White.UIItems.TabItems
 
         public override void HookEvents(IUIItemEventListener eventListener)
         {
-            handler = delegate { eventListener.EventOccured(new TabEvent(this)); };
-            Automation.AddAutomationPropertyChangedEventHandler(automationElement, TreeScope.Descendants, handler, SelectionItemPattern.IsSelectedProperty);
+            handler = automationElement.RegisterPropertyChangedEvent(
+                TreeScope.Descendants, delegate { eventListener.EventOccured(new TabEvent(this)); },
+                SelectionItemPattern.IsSelectedProperty);
         }
 
         public override void UnHookEvents()
         {
-            Automation.RemoveAutomationPropertyChangedEventHandler(automationElement, handler);
+            automationElement.RemovePropertyChangedEventHandler(handler);
         }
     }
 }

@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.EventHandlers;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Recording;
 using TestStack.White.UIItemEvents;
@@ -20,7 +23,7 @@ namespace TestStack.White.UIItems
     public class ListView : UIItem, ISuggestionList, IVerticalSpanProvider
     {
         private readonly ListViewFactory listViewFactory;
-        private AutomationPropertyChangedEventHandler handler;
+        private IAutomationPropertyChangedEventHandler handler;
 
         protected ListView() {}
 
@@ -128,13 +131,12 @@ namespace TestStack.White.UIItems
         {
             var safeAutomationEventHandler =
                 new SafeAutomationEventHandler(this, eventListener, objs => ListViewEvent.Create(this, (AutomationPropertyChangedEventArgs) objs[0]));
-            handler = safeAutomationEventHandler.PropertyChange;
-            Automation.AddAutomationPropertyChangedEventHandler(automationElement, TreeScope.Descendants, handler, SelectionItemPattern.IsSelectedProperty);
+            handler = AutomationElement.RegisterPropertyChangedEvent(TreeScope.Descendants, (element, property, obj) => safeAutomationEventHandler.PropertyChange(element, new AutomationPropertyChangedEventArgs {NewValue = obj}), SelectionItemPattern.IsSelectedProperty);
         }
 
         public override void UnHookEvents()
         {
-            Automation.RemoveAutomationPropertyChangedEventHandler(automationElement, handler);
+            AutomationElement.RemovePropertyChangedEventHandler(handler);
         }
 
         public virtual List<string> Items

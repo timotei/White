@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 
 namespace TestStack.White.AutomationElementSearch
 {

@@ -1,5 +1,8 @@
 using System.Collections.Generic;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.EventHandlers;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Recording;
 using TestStack.White.UIItemEvents;
@@ -14,8 +17,8 @@ namespace TestStack.White.UIItems.TreeItems
     public class Tree : UIItem, IVerticalSpanProvider
     {
         private readonly AutomationElementFinder finder;
-        private AutomationPropertyChangedEventHandler clickedTreeNodeHandler;
-        private AutomationPropertyChangedEventHandler selectedTreeNodeHandler;
+        private IAutomationPropertyChangedEventHandler clickedTreeNodeHandler;
+        private IAutomationPropertyChangedEventHandler selectedTreeNodeHandler;
 
         protected Tree() {}
 
@@ -88,22 +91,17 @@ namespace TestStack.White.UIItems.TreeItems
 
         public override void HookEvents(IUIItemEventListener eventListener)
         {
-            clickedTreeNodeHandler = delegate
-                                         {
-                                             TreeNode node = ClickedNode;
-                                             eventListener.EventOccured((new TreeNodeClickedEvent(this, node, node.IsExpanded())));
-                                         };
+           clickedTreeNodeHandler = AutomationElement.RegisterPropertyChangedEvent(TreeScope.Subtree, delegate
+                {
+                    TreeNode node = ClickedNode;
+                    eventListener.EventOccured(new TreeNodeClickedEvent(this, node, node.IsExpanded()));
+                }, ExpandCollapsePattern.ExpandCollapseStateProperty);
 
-            selectedTreeNodeHandler = delegate
-                                          {
-                                              TreeNode node = SelectedNode;
-                                              eventListener.EventOccured((new TreeNodeSelectEvent(this, node)));
-                                          };
-
-            Automation.AddAutomationPropertyChangedEventHandler(automationElement, TreeScope.Subtree, clickedTreeNodeHandler,
-                                                                ExpandCollapsePatternIdentifiers.ExpandCollapseStateProperty);
-            Automation.AddAutomationPropertyChangedEventHandler(automationElement, TreeScope.Subtree, selectedTreeNodeHandler,
-                                                                SelectionItemPatternIdentifiers.IsSelectedProperty);
+            selectedTreeNodeHandler = AutomationElement.RegisterPropertyChangedEvent(TreeScope.Subtree, delegate
+            {
+                TreeNode node = SelectedNode;
+                eventListener.EventOccured((new TreeNodeSelectEvent(this, node)));
+            }, SelectionItemPattern.IsSelectedProperty);
         }
 
         private TreeNode ClickedNode
@@ -118,8 +116,8 @@ namespace TestStack.White.UIItems.TreeItems
 
         public override void UnHookEvents()
         {
-            Automation.RemoveAutomationPropertyChangedEventHandler(automationElement, clickedTreeNodeHandler);
-            Automation.RemoveAutomationPropertyChangedEventHandler(automationElement, selectedTreeNodeHandler);
+            AutomationElement.RemovePropertyChangedEventHandler(clickedTreeNodeHandler);
+            AutomationElement.RemovePropertyChangedEventHandler(selectedTreeNodeHandler);
         }
 
         /// <summary>

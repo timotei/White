@@ -1,5 +1,6 @@
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using NUnit.Framework;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.TreeItems;
@@ -45,7 +46,7 @@ namespace TestStack.White.UITests.ControlTests.TreeItems
                         "ControlType:{2}, FrameworkId:{1}, expand button not visible",
                         Framework == WindowsFramework.Wpf ? "WPF" : "Win32",
                         Framework.FrameworkId(),
-                        ControlType.TreeItem.LocalizedControlType)));
+                        ControlType.TreeItem)));
         }
 
         [Test]

@@ -1,6 +1,6 @@
 using System;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using Castle.Core.Logging;
 using TestStack.White.Configuration;
 using TestStack.White.Mappings;
@@ -16,9 +16,9 @@ namespace TestStack.White.UIA
             try
             {
                 if (automationElement == null) return "(NULL)";
-                AutomationElement.AutomationElementInformation elementInformation = automationElement.Current;
+                AutomationElement elementInformation = automationElement;
                 return String.Format("AutomationId:{0}, Name:{1}, ControlType:{2}, FrameworkId:{3}", elementInformation.AutomationId, elementInformation.Name,
-                                     elementInformation.ControlType.LocalizedControlType, elementInformation.FrameworkId);
+                                     elementInformation.ControlType, elementInformation.Properties.FrameworkId);
             }
             catch
             {
@@ -28,7 +28,7 @@ namespace TestStack.White.UIA
 
         public static bool IsPrimaryControl(this AutomationElement automationElement)
         {
-            AutomationElement.AutomationElementInformation elementInformation = automationElement.Current;
+            AutomationElement elementInformation = automationElement;
             return ControlDictionary.Instance.IsPrimaryControl(elementInformation.ControlType, elementInformation.ClassName, elementInformation.Name);
         }
 
@@ -36,7 +36,7 @@ namespace TestStack.White.UIA
         {
             try
             {
-                var automationElement = AutomationElement.FromPoint(location);
+                var automationElement = Desktop.Automation.FromPoint(location);
                 Logger.DebugFormat("[PositionBasedSearch] Found AutomationElement ({0}) at location ({1})", automationElement.Display(), location);
                 return automationElement;
             }

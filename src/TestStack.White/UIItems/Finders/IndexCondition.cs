@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Conditions;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Finder;
 
@@ -22,7 +23,7 @@ namespace TestStack.White.UIItems.Finders
             this.index = index;
         }
 
-        public override Condition AutomationCondition
+        public override ConditionBase AutomationCondition
         {
             get { return null; }
         }

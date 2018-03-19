@@ -1,7 +1,9 @@
 using System;
 using System.Drawing;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Identifiers;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.Recording;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.UIItems.Finders;
@@ -9,6 +11,7 @@ using TestStack.White.UIItems.Scrolling;
 using TestStack.White.UIItems.WindowItems;
 using TestStack.White.WindowsAPI;
 using Point = System.Windows.Point;
+using Window = TestStack.White.UIItems.WindowItems.Window;
 
 namespace TestStack.White.UIItems
 {
@@ -267,14 +270,6 @@ namespace TestStack.White.UIItems
         /// <param name="text">Name Value to match against</param>
         /// <returns>Returns <c>true</c> if matches, else <c>false</c></returns>
         bool NameMatches(string text);
-
-        /// <summary>
-        /// Compare the <see cref="AutomationProperty"/> from the UI Item against an object
-        /// </summary>
-        /// <param name="property">The <see cref="AutomationProperty"/> value to compare to</param>
-        /// <param name="compareTo">The object to compare it to</param>
-        /// <returns>Returns <c>true</c> if matches, else <c>false</c></returns>
-        bool ValueOfEquals(AutomationProperty property, object compareTo);
 
         /// <summary>
         /// Check if the UI Item equals an object

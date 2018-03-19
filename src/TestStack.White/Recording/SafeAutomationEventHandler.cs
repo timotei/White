@@ -1,5 +1,5 @@
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using Castle.Core.Logging;
 using TestStack.White.Configuration;
 using TestStack.White.UIItemEvents;
@@ -49,6 +49,15 @@ namespace TestStack.White.Recording
                 userEvent = new ExceptionEvent(uiItem, exception);
             }
             return userEvent;
+        }
+    }
+
+    public class AutomationPropertyChangedEventArgs
+    {
+        public object NewValue  
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
         }
     }
 }

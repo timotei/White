@@ -1,4 +1,4 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 
 namespace TestStack.White.UIItems.Scrolling
 {

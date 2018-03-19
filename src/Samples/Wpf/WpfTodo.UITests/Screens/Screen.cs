@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Identifiers;
 using TestStack.White.ScreenObjects;
 using TestStack.White.UIItems.WindowItems;
 using TestStack.White.Utility;
@@ -19,7 +20,7 @@ namespace WpfTodo.UITests.Screens
 
         bool ShellIsBusy()
         {
-            var currentPropertyValue = Window.AutomationElement.GetCurrentPropertyValue(AutomationElement.HelpTextProperty);
+            var currentPropertyValue = Window.AutomationElement.BasicAutomationElement.GetPropertyValue(AutomationObjectIds.HelpTextProperty);
             return currentPropertyValue != null && ((string)currentPropertyValue).Contains("Busy");
         }
     }

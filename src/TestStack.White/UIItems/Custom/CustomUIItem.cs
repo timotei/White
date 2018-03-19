@@ -1,5 +1,5 @@
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.UIItems.Actions;
 
 namespace TestStack.White.UIItems.Custom

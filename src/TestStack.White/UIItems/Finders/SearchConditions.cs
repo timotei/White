@@ -1,21 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Conditions;
 
 namespace TestStack.White.UIItems.Finders
 {
     public class SearchConditions : List<SearchCondition>
     {
-        public virtual Condition AutomationCondition
+        public virtual ConditionBase AutomationCondition
         {
             get
             {
-                if (Count == 0) return Condition.TrueCondition;
+                if (Count == 0) return TrueCondition.Default;
 
-                var automationConditions = new List<Condition>();
+                var automationConditions = new List<ConditionBase>();
                 ForEach(delegate(SearchCondition condition)
                             {
-                                Condition automationCondition = condition.AutomationCondition;
+                                ConditionBase automationCondition = condition.AutomationCondition;
                                 if (automationCondition != null) automationConditions.Add(automationCondition);
                             });
                 return automationConditions.Count == 1 ? automationConditions[0] : new AndCondition(automationConditions.ToArray());

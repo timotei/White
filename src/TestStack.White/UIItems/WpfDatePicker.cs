@@ -1,5 +1,6 @@
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.UIItems.Actions;
 
 namespace TestStack.White.UIItems
@@ -12,7 +13,7 @@ namespace TestStack.White.UIItems
 
         public override void SetDate(DateTime? dateTime, DateFormat dateFormat)
         {
-            var valuePattern = (ValuePattern)AutomationElement.GetCurrentPattern(ValuePattern.Pattern);
+            var valuePattern = AutomationElement.Patterns.Value.Pattern;
             valuePattern.SetValue(dateTime != null ? dateTime.Value.ToShortDateString() : "");
         }
     }

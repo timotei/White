@@ -1,5 +1,5 @@
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.Recording;
 using TestStack.White.UIItems.Actions;
 
@@ -12,8 +12,8 @@ namespace TestStack.White.UIItems
 
         public virtual void Click(int xOffset, int yOffset)
         {
-            double x = automationElement.Current.BoundingRectangle.X + xOffset;
-            double y = automationElement.Current.BoundingRectangle.Y + yOffset;
+            double x = automationElement.BoundingRectangle.X + xOffset;
+            double y = automationElement.BoundingRectangle.Y + yOffset;
             mouse.Click(new Point((int) x, (int) y), actionListener);
         }
 

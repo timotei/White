@@ -1,4 +1,4 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.Sessions;
 using TestStack.White.UIItems.WindowItems;
 

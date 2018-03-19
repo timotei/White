@@ -1,5 +1,6 @@
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems.Actions;
@@ -12,7 +13,7 @@ namespace TestStack.White.UIItems.ListViewItems
         private static ISuggestionList Find(IActionListener actionListener)
         {
             AutomationElement dropDown =
-                new AutomationElementFinder(AutomationElement.RootElement).Child(AutomationSearchCondition.ByClassName("Auto-Suggest Dropdown"));
+                new AutomationElementFinder(Desktop.Automation.GetDesktop()).Child(AutomationSearchCondition.ByClassName("Auto-Suggest Dropdown"));
             if (dropDown == null) return null;
 
             AutomationElement listViewElement =

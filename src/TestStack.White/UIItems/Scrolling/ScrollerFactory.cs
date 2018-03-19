@@ -1,4 +1,4 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.UIItems.Actions;
 
 namespace TestStack.White.UIItems.Scrolling
@@ -7,7 +7,7 @@ namespace TestStack.White.UIItems.Scrolling
     {
         internal static IScrollBars CreateBars(AutomationElement parentElement, IActionListener listener)
         {
-            var frameworkId = parentElement.Current.FrameworkId;
+            var frameworkId = parentElement.Properties.FrameworkId;
             if (frameworkId == WindowsFramework.Wpf.FrameworkId())
                 return new WPFScrollBars(parentElement, listener);
             if (frameworkId == WindowsFramework.Silverlight.FrameworkId())

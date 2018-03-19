@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.Configuration;
 
 namespace TestStack.White.UIItems.Actions
@@ -10,7 +10,7 @@ namespace TestStack.White.UIItems.Actions
 
         public ProcessActionListener(AutomationElement automationElement)
         {
-            int processId = automationElement.Current.ProcessId;
+            int processId = automationElement.Properties.ProcessId;
             process = Process.GetProcessById(processId);
         }
 

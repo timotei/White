@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Windows.Automation;
+using FlaUI.Core;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Conditions;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.Identifiers;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.UIItems.Custom;
 using TestStack.White.UIItems.WindowStripControls;
@@ -82,17 +86,17 @@ namespace TestStack.White.UIItems.Finders
             return new SearchCriteria(SearchConditionFactory.CreateForControlType(controlType));
         }
 
-        public static SearchCriteria ByNativeProperty(AutomationProperty automationProperty, string value)
+        public static SearchCriteria ByNativeProperty(PropertyId automationProperty, string value)
         {
             return new SearchCriteria(SearchConditionFactory.CreateForNativeProperty(automationProperty, value));
         }
 
-        public static SearchCriteria ByNativeProperty(AutomationProperty automationProperty, bool value)
+        public static SearchCriteria ByNativeProperty(PropertyId automationProperty, bool value)
         {
             return new SearchCriteria(SearchConditionFactory.CreateForNativeProperty(automationProperty, value));
         }
 
-        public static SearchCriteria ByNativeProperty(AutomationProperty automationProperty, object value)
+        public static SearchCriteria ByNativeProperty(PropertyId automationProperty, object value)
         {
             return new SearchCriteria(SearchConditionFactory.CreateForNativeProperty(automationProperty, value));
         }
@@ -109,14 +113,14 @@ namespace TestStack.White.UIItems.Finders
             return new SearchCriteria(SearchConditionFactory.CreateForClassName(className));
         }
 
-        internal virtual Condition AutomationCondition
+        internal virtual ConditionBase AutomationCondition
         {
             get { return conditions.AutomationCondition; }
         }
 
-        internal virtual Condition AutomationConditionWith(PropertyCondition propertyCondition)
+        internal virtual ConditionBase AutomationConditionWith(PropertyCondition propertyCondition)
         {
-            Condition condition = conditions.AutomationCondition;
+            ConditionBase condition = conditions.AutomationCondition;
             return new AndCondition(condition, propertyCondition);
         }
 
@@ -137,7 +141,7 @@ namespace TestStack.White.UIItems.Finders
                 var automationSearchCondition = new AutomationSearchCondition();
                 foreach (SearchCondition searchCondition in conditions)
                 {
-                    Condition condition = searchCondition.AutomationCondition;
+                    ConditionBase condition = searchCondition.AutomationCondition;
                     if (condition != null) automationSearchCondition.Add(condition);
                 }
                 return automationSearchCondition;
@@ -194,19 +198,19 @@ namespace TestStack.White.UIItems.Finders
             return this;
         }
 
-        public virtual SearchCriteria AndNativeProperty(AutomationProperty automationProperty, string value)
+        public virtual SearchCriteria AndNativeProperty(PropertyId automationProperty, string value)
         {
             conditions.Insert(0, SearchConditionFactory.CreateForNativeProperty(automationProperty, value));
             return this;
         }
 
-        public virtual SearchCriteria AndNativeProperty(AutomationProperty automationProperty, bool value)
+        public virtual SearchCriteria AndNativeProperty(PropertyId automationProperty, bool value)
         {
             conditions.Insert(0, SearchConditionFactory.CreateForNativeProperty(automationProperty, value));
             return this;
         }
 
-        public virtual SearchCriteria AndNativeProperty(AutomationProperty automationProperty, object value)
+        public virtual SearchCriteria AndNativeProperty(PropertyId automationProperty, object value)
         {
             conditions.Insert(0, SearchConditionFactory.CreateForNativeProperty(automationProperty, value));
             return this;

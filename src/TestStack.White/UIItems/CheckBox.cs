@@ -1,4 +1,7 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.EventHandlers;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.Recording;
 using TestStack.White.UIItemEvents;
 using TestStack.White.UIItems.Actions;
@@ -7,7 +10,7 @@ namespace TestStack.White.UIItems
 {
     public class CheckBox : Button
     {
-        private AutomationPropertyChangedEventHandler handler;
+        private IAutomationPropertyChangedEventHandler handler;
 
         protected CheckBox()
         {
@@ -50,18 +53,17 @@ namespace TestStack.White.UIItems
 
         public override void HookEvents(IUIItemEventListener eventListener)
         {
-            handler = delegate
-                          {
-                              ActionPerformed();
-                              eventListener.EventOccured(new CheckBoxEvent(this));
-                          };
-            Automation.AddAutomationPropertyChangedEventHandler(automationElement, TreeScope.Element, handler,
-                                                                TogglePattern.ToggleStateProperty);
+            handler = automationElement.RegisterPropertyChangedEvent(
+                TreeScope.Element, delegate
+                {
+                    ActionPerformed();
+                    eventListener.EventOccured(new CheckBoxEvent(this));
+                }, TogglePattern.ToggleStateProperty);
         }
 
         public override void UnHookEvents()
         {
-            Automation.RemoveAutomationPropertyChangedEventHandler(automationElement, handler);
+            automationElement.RemovePropertyChangedEventHandler(handler);
         }
 
         public override void SetValue(object value)

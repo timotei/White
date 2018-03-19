@@ -27,7 +27,7 @@ namespace TestStack.White.UITests
             var colorref = new COLORREF { R = 200 };
             Console.WriteLine(colorref.R);
 
-            var nativeWindow = new NativeWindow(new IntPtr(MainWindow.Get<TextBox>("TextBox").AutomationElement.Current.NativeWindowHandle));
+            var nativeWindow = new NativeWindow(MainWindow.Get<TextBox>("TextBox").AutomationElement.Properties.NativeWindowHandle);
             Console.WriteLine(nativeWindow.BackgroundColor);
             Console.WriteLine(nativeWindow.TextColor);
 

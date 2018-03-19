@@ -1,19 +1,20 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Identifiers;
 
 namespace TestStack.White.UIA
 {
-    public class AutomationPatterns : List<AutomationPattern>
+    public class AutomationPatterns : List<PatternId>
     {
-        public AutomationPatterns(params AutomationPattern[] collection) : base(collection) {}
+        public AutomationPatterns(params PatternId[] collection) : base(collection) {}
 
         public AutomationPatterns(AutomationElement automationElement)
         {
             AddRange(automationElement.GetSupportedPatterns());
         }
 
-        public virtual bool HasPattern(AutomationPattern automationPattern)
+        public virtual bool HasPattern(PatternId automationPattern)
         {
             return this.Any(pattern => pattern.Id.Equals(automationPattern.Id));
         }

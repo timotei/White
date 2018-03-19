@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.Configuration;
 using TestStack.White.Factory;
 using TestStack.White.UIItems;
@@ -39,7 +40,7 @@ namespace TestStack.White.UITests.ControlTests.WindowStripControls
                 Assert.That(() => { MainWindow.Get<StatusStrip>("foo"); },
                     Throws.TypeOf<AutomationException>().With.
                     Message.EqualTo(String.Format("Failed to get ControlType={0},AutomationId=foo",
-                        ControlType.StatusBar.LocalizedControlType)));
+                        ControlType.StatusBar)));
             }
         }
 

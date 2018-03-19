@@ -1,5 +1,7 @@
+using System;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.UIItems.Actions;
 using Action = TestStack.White.UIItems.Actions.Action;
 
@@ -17,12 +19,12 @@ namespace TestStack.White.UIItems.Scrolling
 
         protected override double ScrollPercentage
         {
-            get { return ScrollPattern.Current.VerticalViewSize; }
+            get { return ScrollPattern.VerticalViewSize; }
         }
 
         public override double Value
         {
-            get { return ScrollPattern.Current.VerticalScrollPercent; }
+            get { return ScrollPattern.VerticalScrollPercent; }
         }
 
         public override Rect Bounds
@@ -52,7 +54,7 @@ namespace TestStack.White.UIItems.Scrolling
 
         public virtual bool IsScrollable
         {
-            get { return ScrollPattern.Current.VerticallyScrollable; }
+            get { return ScrollPattern.VerticallyScrollable; }
         }
 
         public virtual bool IsNotMinimum
@@ -62,19 +64,20 @@ namespace TestStack.White.UIItems.Scrolling
 
         public override void SetToMinimum()
         {
-            ScrollPattern.SetScrollPercent(ScrollPattern.Current.HorizontalScrollPercent, 0);
+            ScrollPattern.SetScrollPercent(ScrollPattern.HorizontalScrollPercent, 0);
         }
 
         public override void SetToMaximum()
         {
-            ScrollPattern.SetScrollPercent(ScrollPattern.Current.HorizontalScrollPercent, 100);
+            ScrollPattern.SetScrollPercent(ScrollPattern.HorizontalScrollPercent, 100);
         }
 
         protected virtual void Scroll(ScrollAmount amount)
         {
             if (!IsScrollable) return;
-            ScrollPattern.ScrollVertical(amount);
+            ScrollPattern.Scroll(0, amount);
             actionListener.ActionPerformed(Action.Scroll);
+            throw new InvalidOperationException("Verifyu this (amount vs value)");
         }
     }
 }

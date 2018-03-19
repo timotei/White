@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems.Actions;
@@ -24,10 +25,10 @@ namespace TestStack.White.Factory
         {
             if (customControlTypes == null)
                 customControlTypes = new AutomationElementFinder(tableElement).Descendants(AutomationSearchCondition.ByControlType(ControlType.Custom));
-            string rowNameSuffix = " " + rowElement.Current.Name;
+            string rowNameSuffix = " " + rowElement.Name;
             Predicate<AutomationElement> cellPredicate = element =>
             {
-                string name = element.Current.Name;
+                string name = element.Name;
                 return name.EndsWith(rowNameSuffix);
             };
             List<AutomationElement> tableCellElements = customControlTypes.FindAll(cellPredicate);

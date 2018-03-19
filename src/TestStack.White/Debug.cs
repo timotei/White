@@ -1,7 +1,14 @@
 using System;
 using System.Text;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using Castle.Core.Logging;
+using FlaUI.Core;
+using FlaUI.Core.Conditions;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.Identifiers;
+using FlaUI.UIA3;
+using FlaUI.UIA3.Identifiers;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems;
 
@@ -16,8 +23,7 @@ namespace TestStack.White
         {
             try
             {
-                AutomationElement element =
-                    AutomationElement.RootElement.FindFirst(TreeScope.Children, new PropertyCondition(AutomationElement.NameProperty, processName));
+                AutomationElement element = Desktop.Automation.GetDesktop().FindFirst(TreeScope.Children, new PropertyCondition(AutomationObjectIds.NameProperty, processName));
                 Details(element);
             }
             catch (Exception)
@@ -46,22 +52,22 @@ namespace TestStack.White
         {
             WriteDetail(automationElement, stringBuilder, displayPadding);
             DisplayPattern(automationElement, stringBuilder, displayPadding);
-            AutomationElementCollection children = automationElement.FindAll(TreeScope.Children, Condition.TrueCondition);
+            AutomationElement[] children = automationElement.FindAll(TreeScope.Children, TrueCondition.Default);
             foreach (AutomationElement child in children)
                 Details(stringBuilder, child, displayPadding + Tab + Tab);
         }
 
         private static void WriteDetail(AutomationElement automationElement, StringBuilder stringBuilder, string displayPadding)
         {
-            WriteDetail(stringBuilder, "AutomationId: " + automationElement.Current.AutomationId, displayPadding);
-            WriteDetail(stringBuilder, "ControlType: " + automationElement.Current.ControlType.ProgrammaticName, displayPadding);
-            WriteDetail(stringBuilder, "Name: " + automationElement.Current.Name, displayPadding);
-            WriteDetail(stringBuilder, "HelpText: " + automationElement.Current.HelpText, displayPadding);
-            WriteDetail(stringBuilder, "Bounding rectangle: " + automationElement.Current.BoundingRectangle, displayPadding);
-            WriteDetail(stringBuilder, "ClassName: " + automationElement.Current.ClassName, displayPadding);
-            WriteDetail(stringBuilder, "IsOffScreen: " + automationElement.Current.IsOffscreen, displayPadding);
-            WriteDetail(stringBuilder, "FrameworkId: " + automationElement.Current.FrameworkId, displayPadding);
-            WriteDetail(stringBuilder, "ProcessId: " + automationElement.Current.ProcessId, displayPadding);
+            WriteDetail(stringBuilder, "AutomationId: " + automationElement.AutomationId, displayPadding);
+            WriteDetail(stringBuilder, "ControlType: " + automationElement.ControlType, displayPadding);
+            WriteDetail(stringBuilder, "Name: " + automationElement.Name, displayPadding);
+            WriteDetail(stringBuilder, "HelpText: " + automationElement.HelpText, displayPadding);
+            WriteDetail(stringBuilder, "Bounding rectangle: " + automationElement.BoundingRectangle, displayPadding);
+            WriteDetail(stringBuilder, "ClassName: " + automationElement.ClassName, displayPadding);
+            WriteDetail(stringBuilder, "IsOffScreen: " + automationElement.IsOffscreen, displayPadding);
+            WriteDetail(stringBuilder, "FrameworkId: " + automationElement.Properties.FrameworkId, displayPadding);
+            WriteDetail(stringBuilder, "ProcessId: " + automationElement.Properties.ProcessId, displayPadding);
             stringBuilder.AppendLine();
         }
 
@@ -78,7 +84,7 @@ namespace TestStack.White
                 stringBuilder.AppendLine();
                 stringBuilder.AppendLine("All windows:");
                 stringBuilder.AppendLine();
-                GetAllWindows(stringBuilder, 0, AutomationElement.RootElement);
+                GetAllWindows(stringBuilder, 0, Desktop.Automation.GetDesktop());
                 return stringBuilder.ToString();
             }
             catch (Exception)
@@ -91,14 +97,14 @@ namespace TestStack.White
         private static void GetAllWindows(StringBuilder stringBuilder, int level, AutomationElement baseElement)
         {
             string padding = level == 0 ? string.Empty : Tab;
-            var windowCondition = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Window);
-            AutomationElementCollection allWindows = baseElement.FindAll(TreeScope.Children, windowCondition);
+            var windowCondition = new PropertyCondition(AutomationObjectIds.ControlTypeProperty, ControlType.Window);
+            AutomationElement[] allWindows = baseElement.FindAll(TreeScope.Children, windowCondition);
             foreach (AutomationElement windowElement in allWindows)
             {
-                var pattern = (WindowPattern) UIItem.Pattern(windowElement, WindowPattern.Pattern);
-                string modalText = pattern == null ? "(null)" : pattern.Current.IsModal.ToString();
-                stringBuilder.AppendFormat("{0}Name: {1},  Bounds: {2} ProcessId: {3}, Modal: {4}", padding, windowElement.Current.Name,
-                                           windowElement.Current.BoundingRectangle, windowElement.Current.ProcessId, modalText);
+                var pattern = windowElement.Patterns.Window.PatternOrDefault;
+                string modalText = pattern == null ? "(null)" : pattern.IsModal.ToString();
+                stringBuilder.AppendFormat("{0}Name: {1},  Bounds: {2} ProcessId: {3}, Modal: {4}", padding, windowElement.Name,
+                                           windowElement.BoundingRectangle, windowElement.Properties.ProcessId, modalText);
                 stringBuilder.AppendLine();
 
                 if (level == 0) GetAllWindows(stringBuilder, 1, windowElement);
@@ -107,13 +113,14 @@ namespace TestStack.White
 
         private static void DisplayPattern(AutomationElement automationElement, StringBuilder stringBuilder, string displayPadding)
         {
-            AutomationPattern[] supportedPatterns = automationElement.GetSupportedPatterns();
-            foreach (AutomationPattern automationPattern in supportedPatterns)
-            {
-                var pattern = (BasePattern) automationElement.GetCurrentPattern(automationPattern);
-                stringBuilder.Append(displayPadding).AppendLine(pattern.ToString());
-            }
-            stringBuilder.AppendLine();
+            throw new NotImplementedException("Patterns can't be provided dynamically");
+            //PatternId[] supportedPatterns = automationElement.GetSupportedPatterns();
+            //foreach (PatternId automationPattern in supportedPatterns)
+            //{
+            //    var pattern = (BasePattern) automationElement.Patterns.GetCustomPattern().GetCurrentPattern(automationPattern);
+            //    stringBuilder.Append(displayPadding).AppendLine(pattern.ToString());
+            //}
+            //stringBuilder.AppendLine();
         }
 
         public static void LogProperties(UIItem uiItem)
@@ -123,11 +130,12 @@ namespace TestStack.White
 
         public static void LogProperties(AutomationElement element)
         {
-            AutomationProperty[] automationProperties = element.GetSupportedProperties();
-            foreach (AutomationProperty automationProperty in automationProperties)
-            {
-                Logger.Info(automationProperty.ProgrammaticName + ":" + element.GetCurrentPropertyValue(automationProperty));
-            }
+            throw new NotImplementedException("Porperties can't be retrieved dynamically");
+            //AutomationProperty[] automationProperties = element.GetSupportedProperties();
+            //foreach (AutomationProperty automationProperty in automationProperties)
+            //{
+            //    Logger.Info(automationProperty.Name + ":" + element.GetCurrentPropertyValue(automationProperty));
+            //}
         }
 
         public static void LogPatterns(UIItem uiItem)

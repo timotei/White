@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Configuration;
 using TestStack.White.Sessions;
@@ -53,7 +53,7 @@ namespace TestStack.White.Factory
                 return specializedWindowFactory.Create(element, option, windowSession);
             }
 
-            var windowsFramework = WindowsFrameworkExtensions.FromFrameworkId(element.Current.FrameworkId);
+            var windowsFramework = WindowsFrameworkExtensions.FromFrameworkId(element.Properties.FrameworkId);
             if (windowsFramework == WindowsFramework.WinForms) return new WinFormWindow(element, option, windowSession);
             if (windowsFramework == WindowsFramework.Wpf) return new WPFWindow(element, WindowFactory.Desktop, option, windowSession);
             if (windowsFramework == WindowsFramework.Win32) return new Win32Window(element, WindowFactory.Desktop, option, windowSession);

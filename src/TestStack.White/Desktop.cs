@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.UIA3;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Factory;
 using TestStack.White.Sessions;
@@ -10,6 +12,7 @@ using TestStack.White.UIItems;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.UIItems.ListBoxItems;
 using TestStack.White.UIItems.WindowItems;
+using Window = TestStack.White.UIItems.WindowItems.Window;
 
 namespace TestStack.White
 {
@@ -18,9 +21,11 @@ namespace TestStack.White
         public static readonly Desktop Instance = Create();
         private readonly AutomationElementFinder finder;
 
+        public static UIA3Automation Automation { get; private set; }
         private static Desktop Create()
         {
-            return new Desktop(AutomationElement.RootElement, new NullActionListener(), InitializeOption.NoCache, new NullWindowSession());
+            Automation = new UIA3Automation();
+            return new Desktop(Automation.GetDesktop(), new NullActionListener(), InitializeOption.NoCache, new NullWindowSession());
         }
 
         private Desktop(AutomationElement automationElement, IActionListener actionListener, InitializeOption initializeOption, WindowSession windowSession)

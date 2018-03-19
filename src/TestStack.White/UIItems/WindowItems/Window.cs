@@ -1,3 +1,4 @@
+using FlaUI.Core.AutomationElements.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +7,13 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.Conditions;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.EventHandlers;
+using FlaUI.Core.Exceptions;
+using FlaUI.Core.Patterns;
+using FlaUI.UIA3.Identifiers;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Configuration;
 using TestStack.White.Factory;
@@ -33,7 +40,7 @@ namespace TestStack.White.UIItems.WindowItems
         private static readonly Dictionary<DisplayState, WindowVisualState> WindowStates =
             new Dictionary<DisplayState, WindowVisualState>();
 
-        private AutomationEventHandler handler;
+        private IAutomationEventHandler handler;
         /// <summary>
         /// If a window is opened then you try and close it straight away, the window can fail to close
         /// 
@@ -88,9 +95,9 @@ UI actions on window needing mouse would not work in area not falling under the 
             get { return TitleBar == null ? Name : TitleBar.Name; }
         }
 
-        private WindowPattern WinPattern
+        private IWindowPattern WinPattern
         {
-            get { return (WindowPattern)Pattern(WindowPattern.Pattern); }
+            get { return AutomationElement.Patterns.Window.PatternOrDefault; }
         }
 
         /// <summary>
@@ -103,7 +110,7 @@ UI actions on window needing mouse would not work in area not falling under the 
             {
                 try
                 {
-                    return automationElement.Current.IsOffscreen;
+                    return automationElement.IsOffscreen;
                 }
                 catch (ElementNotAvailableException)
                 {
@@ -123,7 +130,7 @@ UI actions on window needing mouse would not work in area not falling under the 
         public virtual void Close()
         {
             minOpenTime.Wait();
-            var windowPattern = (WindowPattern)Pattern(WindowPattern.Pattern);
+            var windowPattern = AutomationElement.Patterns.Window.PatternOrDefault;
             try
             {
                 Logger.DebugFormat("Closing window {0}", Title);
@@ -219,7 +226,7 @@ UI actions on window needing mouse would not work in area not falling under the 
         /// <exception cref="UIActionException">when window is not responding</exception>
         private void WaitForWindow()
         {
-            var windowPattern = (WindowPattern)Pattern(WindowPattern.Pattern);
+            var windowPattern = AutomationElement.Patterns.Window.PatternOrDefault;
             if (!CoreAppXmlConfiguration.Instance.InProc && !IsConsole() &&
                 (windowPattern != null && !windowPattern.WaitForInputIdle(CoreAppXmlConfiguration.Instance.BusyTimeout)))
             {
@@ -227,26 +234,26 @@ UI actions on window needing mouse would not work in area not falling under the 
             }
             if (windowPattern == null) return;
             var finalState = Retry.For(
-                () => windowPattern.Current.WindowInteractionState,
+                () => windowPattern.WindowInteractionState,
                 windowState => windowState == WindowInteractionState.NotResponding,
                 CoreAppXmlConfiguration.Instance.BusyTimeout());
             if (finalState == WindowInteractionState.NotResponding)
             {
                 const string format = "Window didn't come out of WaitState{0} last state known was {1}";
-                var message = string.Format(format, Constants.BusyMessage, windowPattern.Current.WindowInteractionState);
+                var message = string.Format(format, Constants.BusyMessage, windowPattern.WindowInteractionState);
                 throw new UIActionException(message);
             }
         }
 
         private bool IsConsole()
         {
-            return ("ConsoleWindowClass".Equals(automationElement.Current.ClassName));
+            return ("ConsoleWindowClass".Equals(automationElement.ClassName));
         }
 
         /// <exception cref="System.ArgumentException">when current process is not available any more (id expired)</exception>
         protected virtual void WaitForProcess()
         {
-            Process.GetProcessById(automationElement.Current.ProcessId).WaitForInputIdle(CoreAppXmlConfiguration.Instance.BusyTimeout);
+            Process.GetProcessById(automationElement.Properties.ProcessId).WaitForInputIdle(CoreAppXmlConfiguration.Instance.BusyTimeout);
         }
 
         public override void ActionPerformed(Action action)
@@ -323,7 +330,7 @@ UI actions on window needing mouse would not work in area not falling under the 
             get
             {
                 foreach (var keyValuePair in WindowStates)
-                    if (keyValuePair.Value.Equals(WinPattern.Current.WindowVisualState)) return keyValuePair.Key;
+                    if (keyValuePair.Value.Equals(WinPattern.WindowVisualState)) return keyValuePair.Key;
                 throw new WhiteException("Not in any of the possible states, may be it is closed");
             }
             set
@@ -342,20 +349,19 @@ UI actions on window needing mouse would not work in area not falling under the 
 
         private bool AlreadyInAskedState(DisplayState value)
         {
-            return (DisplayState.Maximized == value && !WinPattern.Current.CanMaximize) ||
-                   (DisplayState.Minimized == value && !WinPattern.Current.CanMinimize);
+            return (DisplayState.Maximized == value && !WinPattern.CanMaximize) ||
+                   (DisplayState.Minimized == value && !WinPattern.CanMinimize);
         }
 
         public override void HookEvents(IUIItemEventListener eventListener)
         {
-            handler = delegate { };
-            Automation.AddAutomationEventHandler(AutomationElement.MenuOpenedEvent, automationElement,
-                                                 TreeScope.Descendants, handler);
+            handler = AutomationElement.RegisterEvent(AutomationObjectIds.MenuOpenedEvent, TreeScope.Descendants,
+                (element, id) => { });
         }
 
         public override void UnHookEvents()
         {
-            Automation.RemoveAutomationEventHandler(AutomationElement.MenuOpenedEvent, automationElement, handler);
+            AutomationElement.RemoveAutomationEventHandler(AutomationObjectIds.MenuOpenedEvent, handler);
         }
 
         public override string ToString()
@@ -401,7 +407,7 @@ UI actions on window needing mouse would not work in area not falling under the 
 
         public virtual bool IsModal
         {
-            get { return WinPattern.Current.IsModal; }
+            get { return WinPattern.IsModal; }
         }
 
         //TODO: Position based find should understand MdiChild
@@ -466,12 +472,12 @@ UI actions on window needing mouse would not work in area not falling under the 
         {
             get
             {
-                AutomationElementCollection allElements =
-                    automationElement.FindAll(TreeScope.Descendants | TreeScope.Element, Condition.TrueCondition);
+                AutomationElement[] allElements =
+                    automationElement.FindAll(TreeScope.Descendants | TreeScope.Element, TrueCondition.Default);
                 return
-                    allElements.Contains(
+                    allElements.Any(
                         element =>
-                        element.Current.HasKeyboardFocus && !element.Current.ControlType.Equals(ControlType.Custom));
+                        element.Properties.HasKeyboardFocus && !element.ControlType.Equals(ControlType.Custom));
             }
         }
     }

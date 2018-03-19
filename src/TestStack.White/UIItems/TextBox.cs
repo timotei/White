@@ -1,4 +1,7 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.EventHandlers;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.Recording;
 using TestStack.White.UIA;
 using TestStack.White.UIItemEvents;
@@ -8,7 +11,7 @@ namespace TestStack.White.UIItems
 {
     public class TextBox : UIItem, IScrollable
     {
-        private AutomationPropertyChangedEventHandler handler;
+        private IAutomationPropertyChangedEventHandler handler;
         protected TextBox() {}
         public TextBox(AutomationElement automationElement, IActionListener actionListener) : base(automationElement, actionListener) {}
 
@@ -21,11 +24,12 @@ namespace TestStack.White.UIItems
         {
             get
             {
-                if (automationElement.Current.IsPassword)
+                if (automationElement.Properties.IsPassword)
                     throw new WhiteException("Text cannot be retrieved from textbox which has secret text (e.g. password) stored in it");
-                var pattern = Pattern(ValuePattern.Pattern) as ValuePattern;
-                if (pattern != null) return pattern.Current.Value;
-                var textPattern = Pattern(TextPattern.Pattern) as TextPattern;
+                var pattern = automationElement.Patterns.Value.PatternOrDefault;
+                if (pattern != null) return pattern.Value;
+
+                var textPattern = automationElement.Patterns.Text.PatternOrDefault;
                 if (textPattern != null) return textPattern.DocumentRange.GetText(int.MaxValue);
 
                 throw new WhiteException(string.Format("AutomationElement for {0} supports neither ValuePattern or TextPattern", ToString()));
@@ -43,7 +47,7 @@ namespace TestStack.White.UIItems
             {
                 try
                 {
-                    var pattern = Pattern(ValuePattern.Pattern) as ValuePattern;
+                    var pattern = automationElement.Patterns.Value.PatternOrDefault;
                     if (pattern != null) pattern.SetValue(value);
                     else
                     {
@@ -64,7 +68,7 @@ namespace TestStack.White.UIItems
 
         public virtual bool IsReadOnly
         {
-            get { return ((ValuePattern) Pattern(ValuePattern.Pattern)).Current.IsReadOnly; }
+            get { return AutomationElement.Patterns.Value.PatternOrDefault.IsReadOnly; }
         }
 
         public virtual void ClickAtRightEdge()
@@ -79,13 +83,14 @@ namespace TestStack.White.UIItems
 
         public override void HookEvents(IUIItemEventListener eventListener)
         {
-            handler = delegate { eventListener.EventOccured(new TextBoxEvent(this)); };
-            Automation.AddAutomationPropertyChangedEventHandler(automationElement, TreeScope.Element, handler, ValuePattern.ValueProperty);
+            handler = automationElement.RegisterPropertyChangedEvent(
+                TreeScope.Element, delegate { eventListener.EventOccured(new TextBoxEvent(this)); },
+                ValuePattern.ValueProperty);
         }
 
         public override void UnHookEvents()
         {
-            Automation.RemoveAutomationPropertyChangedEventHandler(automationElement, handler);
+            automationElement.RemovePropertyChangedEventHandler(handler);
         }
 
         //TODO: This should be configurable

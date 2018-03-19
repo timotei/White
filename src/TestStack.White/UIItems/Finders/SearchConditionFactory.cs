@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.Identifiers;
+using FlaUI.UIA3.Identifiers;
 using TestStack.White.Mappings;
 using TestStack.White.UIItems.Custom;
 
@@ -10,7 +13,7 @@ namespace TestStack.White.UIItems.Finders
     {
         public static SimpleSearchCondition CreateForControlType(ControlType controlType)
         {
-            return new SimpleSearchCondition(automationElement => automationElement.Current.ControlType, new ControlTypeProperty(controlType, "ControlType"));
+            return new SimpleSearchCondition(automationElement => automationElement.ControlType, new ControlTypeProperty(controlType, "ControlType"));
         }
 
         public static SearchCondition CreateForControlType(Type testControlType, WindowsFramework framework)
@@ -31,43 +34,43 @@ namespace TestStack.White.UIItems.Finders
         /// <returns></returns>
         public static SearchCondition CreateForFrameworkId(string frameworkId)
         {
-            return new SimpleSearchCondition(automationElement => automationElement.Current.FrameworkId,
-                                             new AutomationElementProperty(frameworkId, "FrameworkId", AutomationElement.FrameworkIdProperty));
+            return new SimpleSearchCondition(automationElement => automationElement.Properties.FrameworkId,
+                                             new AutomationElementProperty(frameworkId, "FrameworkId", AutomationObjectIds.FrameworkIdProperty));
         }
 
         public static SearchCondition CreateForAutomationId(string id)
         {
-            return new SimpleSearchCondition(automationElement => automationElement.Current.AutomationId,
-                                             new AutomationElementProperty(id, "AutomationId", AutomationElement.AutomationIdProperty));
+            return new SimpleSearchCondition(automationElement => automationElement.AutomationId,
+                                             new AutomationElementProperty(id, "AutomationId", AutomationObjectIds.AutomationIdProperty));
         }
 
         public static SearchCondition CreateForName(string name)
         {
-            return new SimpleSearchCondition(automationElement => automationElement.Current.Name, new AutomationElementProperty(name, "Name", AutomationElement.NameProperty));
+            return new SimpleSearchCondition(automationElement => automationElement.Name, new AutomationElementProperty(name, "Name", AutomationObjectIds.NameProperty));
         }
 
         public static SearchCondition CreateForClassName(string className)
         {
-            return new SimpleSearchCondition(automationElement => automationElement.Current.ClassName,
-                                             new AutomationElementProperty(className, "ClassName", AutomationElement.ClassNameProperty));
+            return new SimpleSearchCondition(automationElement => automationElement.ClassName,
+                                             new AutomationElementProperty(className, "ClassName", AutomationObjectIds.ClassNameProperty));
         }
 
-        public static SearchCondition CreateForNativeProperty(AutomationProperty automationProperty, string value)
+        public static SearchCondition CreateForNativeProperty(PropertyId automationProperty, string value)
         {
-            var automationElementProperty = new AutomationElementProperty(value, automationProperty.ProgrammaticName, automationProperty);
-            return new SimpleSearchCondition(automationElement => automationElement.GetCurrentPropertyValue(automationProperty), automationElementProperty);
+            var automationElementProperty = new AutomationElementProperty(value, automationProperty.Name, automationProperty);
+            return new SimpleSearchCondition(automationElement => automationElement.BasicAutomationElement.GetPropertyValue(automationProperty), automationElementProperty);
         }
 
-        public static SearchCondition CreateForNativeProperty(AutomationProperty automationProperty, bool value)
+        public static SearchCondition CreateForNativeProperty(PropertyId automationProperty, bool value)
         {
-            var automationElementProperty = new AutomationElementProperty(value, automationProperty.ProgrammaticName, automationProperty);
-            return new SimpleSearchCondition(automationElement => automationElement.GetCurrentPropertyValue(automationProperty), automationElementProperty);
+            var automationElementProperty = new AutomationElementProperty(value, automationProperty.Name, automationProperty);
+            return new SimpleSearchCondition(automationElement => automationElement.BasicAutomationElement.GetPropertyValue(automationProperty), automationElementProperty);
         }
 
-        public static SearchCondition CreateForNativeProperty(AutomationProperty automationProperty, object value)
+        public static SearchCondition CreateForNativeProperty(PropertyId automationProperty, object value)
         {
-            var automationElementProperty = new AutomationElementProperty(value, automationProperty.ProgrammaticName, automationProperty);
-            return new SimpleSearchCondition(automationElement => automationElement.GetCurrentPropertyValue(automationProperty), automationElementProperty);
+            var automationElementProperty = new AutomationElementProperty(value, automationProperty.Name, automationProperty);
+            return new SimpleSearchCondition(automationElement => automationElement.BasicAutomationElement.GetPropertyValue(automationProperty), automationElementProperty);
         }
     }
 }

@@ -1,27 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Conditions;
+using FlaUI.Core.Definitions;
+using FlaUI.UIA3.Identifiers;
 
 namespace TestStack.White.AutomationElementSearch
 {
     public class AutomationSearchCondition
     {
-        static readonly Dictionary<string, Func<AutomationElement.AutomationElementInformation, object, bool>> ValueMatchers =
-            new Dictionary<string, Func<AutomationElement.AutomationElementInformation, object, bool>>();
-        readonly List<Condition> conditions = new List<Condition>();
+        static readonly Dictionary<int, Func<AutomationElement, object, bool>> ValueMatchers =
+            new Dictionary<int, Func<AutomationElement, object, bool>>();
+        readonly List<ConditionBase> conditions = new List<ConditionBase>();
 
         static AutomationSearchCondition()
         {
-            ValueMatchers[AutomationElement.NameProperty.ProgrammaticName] = (information, value) => information.Name.Equals(value);
-            ValueMatchers[AutomationElement.AutomationIdProperty.ProgrammaticName] = (information, value) => information.AutomationId.Equals(value);
-            ValueMatchers[AutomationElement.ClassNameProperty.ProgrammaticName] = (information, value) => information.ClassName.Equals(value);
-            ValueMatchers[AutomationElement.ProcessIdProperty.ProgrammaticName] =
-                (information, value) => information.ProcessId.ToString().Equals(value.ToString());
-            ValueMatchers[AutomationElement.ControlTypeProperty.ProgrammaticName] = (information, value) => information.ControlType.Id.Equals(value);
+            ValueMatchers[AutomationObjectIds.NameProperty.Id] = (information, value) => information.Name.Equals(value);
+            ValueMatchers[AutomationObjectIds.AutomationIdProperty.Id] = (information, value) => information.AutomationId.Equals(value);
+            ValueMatchers[AutomationObjectIds.ClassNameProperty.Id] = (information, value) => information.ClassName.Equals(value);
+            ValueMatchers[AutomationObjectIds.ProcessIdProperty.Id] =
+                (element, value) => element.Properties.ProcessId.ToString().Equals(value.ToString());
+            ValueMatchers[AutomationObjectIds.ControlTypeProperty.Id] = (information, value) => information.ControlType.Equals(value);
         }
 
-        public AutomationSearchCondition(Condition condition)
+        public AutomationSearchCondition(ConditionBase condition)
         {
             conditions.Add(condition);
         }
@@ -39,7 +42,7 @@ namespace TestStack.White.AutomationElementSearch
 
         public virtual AutomationSearchCondition OfName(string name)
         {
-            conditions.Add(new PropertyCondition(AutomationElement.NameProperty, name));
+            conditions.Add(new PropertyCondition(AutomationObjectIds.NameProperty, name));
             return this;
         }
 
@@ -52,7 +55,7 @@ namespace TestStack.White.AutomationElementSearch
 
         public virtual AutomationSearchCondition WithAutomationId(string id)
         {
-            conditions.Add(new PropertyCondition(AutomationElement.AutomationIdProperty, id));
+            conditions.Add(new PropertyCondition(AutomationObjectIds.AutomationIdProperty, id));
             return this;
         }
 
@@ -68,29 +71,29 @@ namespace TestStack.White.AutomationElementSearch
             get
             {
                 var automationSearchCondition = new AutomationSearchCondition();
-                automationSearchCondition.conditions.Add(Condition.TrueCondition);
+                automationSearchCondition.conditions.Add(TrueCondition.Default);
                 return automationSearchCondition;
             }
         }
 
         public virtual AutomationSearchCondition OfControlType(ControlType controlType)
         {
-            conditions.Add(new PropertyCondition(AutomationElement.ControlTypeProperty, controlType));
+            conditions.Add(new PropertyCondition(AutomationObjectIds.ControlTypeProperty, controlType));
             return this;
         }
 
         public virtual AutomationSearchCondition WithProcessId(int processId)
         {
-            conditions.Add(new PropertyCondition(AutomationElement.ProcessIdProperty, processId));
+            conditions.Add(new PropertyCondition(AutomationObjectIds.ProcessIdProperty, processId));
             return this;
         }
 
-        public virtual Condition Condition
+        public virtual ConditionBase Condition
         {
             get
             {
                 if (conditions.Count == 1) return conditions[0];
-                if (conditions.Count == 0) return Condition.TrueCondition;
+                if (conditions.Count == 0) return TrueCondition.Default;
                 return new AndCondition(conditions.ToArray());
             }
         }
@@ -99,14 +102,14 @@ namespace TestStack.White.AutomationElementSearch
         {
             var stringBuilder = new StringBuilder();
             foreach (PropertyCondition condition in conditions)
-                stringBuilder.AppendFormat("{0}:{1}", condition.Property.ProgrammaticName, condition.Value);
+                stringBuilder.AppendFormat("{0}:{1}", condition.Property.Name, condition.Value);
             return stringBuilder.ToString();
         }
 
         public static AutomationSearchCondition ByClassName(string className)
         {
             var automationSearchCondition = new AutomationSearchCondition();
-            automationSearchCondition.conditions.Add(new PropertyCondition(AutomationElement.ClassNameProperty, className));
+            automationSearchCondition.conditions.Add(new PropertyCondition(AutomationObjectIds.ClassNameProperty, className));
             return automationSearchCondition;
         }
 
@@ -123,16 +126,16 @@ namespace TestStack.White.AutomationElementSearch
             return Satisfies(element, conditions.ToArray(), true);
         }
 
-        private bool Satisfies(AutomationElement element, Condition[] testConditions, bool and)
+        private bool Satisfies(AutomationElement element, IEnumerable<ConditionBase> testConditions, bool and)
         {
-            foreach (Condition condition in testConditions)
+            foreach (ConditionBase condition in testConditions)
             {
-                if (condition is AndCondition && !Satisfies(element, ((AndCondition) condition).GetConditions(), true)) return false;
-                if (condition is OrCondition && !Satisfies(element, ((OrCondition) condition).GetConditions(), false)) return false;
+                if (condition is AndCondition && !Satisfies(element, ((AndCondition) condition).Conditions, true)) return false;
+                if (condition is OrCondition && !Satisfies(element, ((OrCondition) condition).Conditions, false)) return false;
 
                 if (condition is PropertyCondition)
                 {
-                    var match = ValueMatchers[((PropertyCondition) condition).Property.ProgrammaticName](element.Current, ((PropertyCondition) condition).Value);
+                    var match = ValueMatchers[((PropertyCondition) condition).Property.Id](element, ((PropertyCondition) condition).Value);
                     if (!match && and) return false;
                     if (match && !and) return true;
                 }
@@ -140,7 +143,7 @@ namespace TestStack.White.AutomationElementSearch
             return true;
         }
 
-        public virtual void Add(Condition condition)
+        public virtual void Add(ConditionBase condition)
         {
             conditions.Add(condition);
         }

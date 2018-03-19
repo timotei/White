@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using Castle.Core.Logging;
+using FlaUI.Core;
+using FlaUI.Core.Conditions;
+using FlaUI.UIA3;
 using TestStack.White.Configuration;
 using TestStack.White.UIA;
 
@@ -10,11 +13,12 @@ namespace TestStack.White.AutomationElementSearch
     public class RawAutomationElementFinder : IDescendantFinder
     {
         private readonly AutomationElement automationElement;
-        private static readonly TreeWalker RawViewWalker = TreeWalker.RawViewWalker;
+        private static readonly ITreeWalker RawViewWalker = Desktop.Automation.TreeWalkerFactory.GetRawViewWalker();
         private readonly ILogger logger = CoreAppXmlConfiguration.Instance.LoggerFactory.Create(typeof(RawAutomationElementFinder));
 
         public RawAutomationElementFinder(AutomationElement automationElement)
         {
+
             this.automationElement = automationElement;
         }
 
@@ -30,7 +34,7 @@ namespace TestStack.White.AutomationElementSearch
                     ();
         }
 
-        public virtual AutomationElement Descendant(Condition condition)
+        public virtual AutomationElement Descendant(ConditionBase condition)
         {
             return Descendant(new AutomationSearchCondition(condition));
         }

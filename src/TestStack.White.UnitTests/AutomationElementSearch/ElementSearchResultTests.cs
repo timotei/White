@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.AutomationElementSearch;
 
 namespace TestStack.White.UnitTests.AutomationElementSearch
@@ -12,7 +12,7 @@ namespace TestStack.White.UnitTests.AutomationElementSearch
         {
             var result = ElementSearchResult.ForMany();
             Assert.That(result.AllResultsFound, Is.False);
-            result.Add(AutomationElement.FocusedElement);
+            result.Add(Desktop.Automation.FocusedElement());
             Assert.That(result.AllResultsFound, Is.False);
         }
 
@@ -21,7 +21,7 @@ namespace TestStack.White.UnitTests.AutomationElementSearch
         {
             var result = ElementSearchResult.ForOne();
             Assert.That(result.AllResultsFound, Is.False);
-            result.Add(AutomationElement.FocusedElement);
+            result.Add(Desktop.Automation.FocusedElement());
             Assert.That(result.AllResultsFound, Is.True);
         }
     }

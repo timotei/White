@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Exceptions;
 using TestStack.White.Factory;
 using TestStack.White.Sessions;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.UIItems.Finders;
 using TestStack.White.UIItems.MenuItems;
+using NotSupportedException = System.NotSupportedException;
 
 namespace TestStack.White.UIItems.WindowItems
 {

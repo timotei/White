@@ -1,4 +1,6 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Patterns;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.UIItems.Actions;
 
 namespace TestStack.White.UIItems.PropertyGridItems
@@ -15,23 +17,18 @@ namespace TestStack.White.UIItems.PropertyGridItems
 
         public virtual string Value
         {
-            get { return ValuePatternId().Value; }
+            get { return ValuePattern().Value; }
             set { ValuePattern().SetValue(value); }
         }
 
-        private ValuePattern.ValuePatternInformation ValuePatternId()
+        private IValuePattern ValuePattern()
         {
-            return ValuePattern().Current;
-        }
-
-        private ValuePattern ValuePattern()
-        {
-            return ((ValuePattern) Pattern(System.Windows.Automation.ValuePattern.Pattern));
+            return AutomationElement.Patterns.Value.PatternOrDefault;
         }
 
         public virtual bool IsReadOnly
         {
-            get { return ValuePatternId().IsReadOnly; }
+            get { return ValuePattern().IsReadOnly; }
         }
 
         public virtual string Text

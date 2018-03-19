@@ -1,6 +1,6 @@
 using System;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using Castle.Core.Logging;
 using TestStack.White.Configuration;
 using TestStack.White.Factory;
@@ -11,6 +11,7 @@ using TestStack.White.UIItems.Actions;
 using TestStack.White.UIItems.Container;
 using TestStack.White.UIItems.Finders;
 using TestStack.White.UIItems.WindowItems;
+using Window = TestStack.White.UIItems.WindowItems.Window;
 
 namespace TestStack.White.Sessions
 {

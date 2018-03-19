@@ -1,13 +1,17 @@
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Conditions;
+using FlaUI.Core.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Automation;
+using System.Windows;
+using FlaUI.UIA3.Identifiers;
 using TestStack.White.UIItems.Finders;
 
 namespace TestStack.White.AutomationElementSearch
 {
     /// <summary>
-    /// Internal to white and should not be used unless a known issue. One should be able to find all items 
+    /// Internal to white and should not be used unless a known issue. One should be able to find all items
     /// </summary>
     public class AutomationElementFinder
     {
@@ -54,7 +58,7 @@ namespace TestStack.White.AutomationElementSearch
             return Descendant(searchCondition.Condition);
         }
 
-        public virtual AutomationElement Descendant(Condition condition)
+        public virtual AutomationElement Descendant(ConditionBase condition)
         {
             return DescendantFinderFactory.Create(automationElement).Descendant(condition);
         }
@@ -82,7 +86,7 @@ namespace TestStack.White.AutomationElementSearch
 
         public virtual AutomationElement FindWindow(SearchCriteria searchCriteria, int processId)
         {
-            var condition = searchCriteria.AutomationConditionWith(new PropertyCondition(AutomationElement.ProcessIdProperty, processId));
+            var condition = searchCriteria.AutomationConditionWith(new PropertyCondition(AutomationObjectIds.ProcessIdProperty, processId));
             return automationElement.FindFirst(TreeScope.Children, condition);
         }
 
@@ -97,7 +101,7 @@ namespace TestStack.White.AutomationElementSearch
         }
 
         /// <summary>
-        /// Uses the Raw View provided by UIAutomation to find elements. RawView sometimes contains extra AutomationElements. This is internal to 
+        /// Uses the Raw View provided by UIAutomation to find elements. RawView sometimes contains extra AutomationElements. This is internal to
         /// white although made public. Should be used only if the standard approaches dont work. Also if you end up using it please raise an issue
         /// so that it can be fixed
         /// Please understand that calling this method on any UIItem which has a lot of child AutomationElements might result in very bad performance.

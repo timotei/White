@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems.Actions;
@@ -18,10 +19,10 @@ namespace TestStack.White.Factory
         {
             RowPredicate =
                 element =>
-                element.Current.Name.Split(' ').Length == 2 &&
+                element.Name.Split(' ').Length == 2 &&
                 // row header containes no Numbers
-                (int.TryParse(element.Current.Name.Split(' ')[0], out result) ||
-                int.TryParse(element.Current.Name.Split(' ')[1], out result));
+                (int.TryParse(element.Name.Split(' ')[0], out result) ||
+                int.TryParse(element.Name.Split(' ')[1], out result));
         }
 
         public TableRowFactory(AutomationElementFinder automationElementFinder)

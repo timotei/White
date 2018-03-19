@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Factory;
 using TestStack.White.Sessions;
@@ -35,7 +35,7 @@ namespace TestStack.White.UIItems.WindowItems
 
         public override Window ModalWindow(string title, InitializeOption option)
         {
-            return windowFactory.FindModalWindow(title, Process.GetProcessById(automationElement.Current.ProcessId), option, automationElement,
+            return windowFactory.FindModalWindow(title, Process.GetProcessById(automationElement.Properties.ProcessId), option, automationElement,
                                                          WindowSession.ModalWindowSession(option));
         }
 
@@ -43,7 +43,7 @@ namespace TestStack.White.UIItems.WindowItems
         //public override List<Window> ModalWindows()
         //{
         //    var automationSearchConditions = new AutomationSearchConditionFactory()
-        //        .GetWindowSearchConditions(automationElement.Current.ProcessId)
+        //        .GetWindowSearchConditions(automationElement.ProcessId)
         //        .ToArray();
 
         //    var descendants = new AutomationElementFinder(automationElement)

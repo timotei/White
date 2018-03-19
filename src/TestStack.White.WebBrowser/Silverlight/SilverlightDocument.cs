@@ -1,5 +1,5 @@
 using System.Threading;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.Factory;
 using TestStack.White.Sessions;
 using TestStack.White.UIItems;

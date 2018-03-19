@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Configuration;
 using TestStack.White.Factory;
@@ -30,7 +31,7 @@ namespace TestStack.White.UIItems.MenuItems
         private static AutomationElementFinder PerformanceHackAsPopupMenuForWin32AppComesOnDesktop(AutomationElementFinder finder,
                                                                                                              AutomationElement parent)
         {
-            if (parent.Equals(AutomationElement.RootElement))
+            if (parent.Equals(Desktop.Instance.AutomationElement))
             {
                 AutomationElement menuElement = finder.Child(AutomationSearchCondition.ByControlType(ControlType.Menu));
                 if (menuElement == null)

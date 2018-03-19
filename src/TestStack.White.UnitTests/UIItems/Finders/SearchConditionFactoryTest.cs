@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.UIItems.Finders;
 
 namespace TestStack.White.UnitTests.UIItems.Finders
@@ -12,16 +12,16 @@ namespace TestStack.White.UnitTests.UIItems.Finders
 
         public SearchConditionFactoryTest()
         {
-            element = AutomationElement.FromPoint(new Point(100, 100));
+            element = Desktop.Automation.FromPoint(new Point(100, 100));
         }
 
         [Test]
         public void Create()
         {
-            Assert.That(SearchConditionFactory.CreateForControlType(element.Current.ControlType).AppliesTo(element), Is.True);
-            Assert.That(SearchConditionFactory.CreateForAutomationId(element.Current.AutomationId).AppliesTo(element), Is.True);
-            Assert.That(SearchConditionFactory.CreateForFrameworkId(element.Current.FrameworkId).AppliesTo(element), Is.True);
-            Assert.That(SearchConditionFactory.CreateForClassName(element.Current.ClassName).AppliesTo(element), Is.True);
+            Assert.That(SearchConditionFactory.CreateForControlType(element.ControlType).AppliesTo(element), Is.True);
+            Assert.That(SearchConditionFactory.CreateForAutomationId(element.AutomationId).AppliesTo(element), Is.True);
+            Assert.That(SearchConditionFactory.CreateForFrameworkId(element.Properties.FrameworkId).AppliesTo(element), Is.True);
+            Assert.That(SearchConditionFactory.CreateForClassName(element.ClassName).AppliesTo(element), Is.True);
         }
     }
 }

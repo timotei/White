@@ -1,5 +1,7 @@
 using System.Runtime.Serialization;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.UIA3.Identifiers;
 
 namespace TestStack.White.UIItems.Finders
 {
@@ -11,11 +13,11 @@ namespace TestStack.White.UIItems.Finders
         }
 
         public ControlTypeProperty(ControlType controlType, string displayName)
-            : base(controlType, displayName, AutomationElement.ControlTypeProperty) { }
+            : base(controlType, displayName, AutomationObjectIds.ControlTypeProperty) { }
 
         public override string DisplayValue
         {
-            get { return ((ControlType)Value).LocalizedControlType; }
+            get { return Value.ToString(); }
         }
     }
 }

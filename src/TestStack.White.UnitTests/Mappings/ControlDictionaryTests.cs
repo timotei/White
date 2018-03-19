@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.Mappings;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.ListBoxItems;
@@ -115,8 +116,8 @@ namespace TestStack.White.UnitTests.Mappings
         [Test]
         public void ControlTypeCanChangeBasedOnFrameworkTest()
         {
-            Assert.That(controlDictionary.GetControlType(typeof(DateTimePicker), WindowsFramework.WinForms.FrameworkId()).Single().ProgrammaticName, Is.EqualTo(ControlType.Pane.ProgrammaticName));
-            Assert.That(controlDictionary.GetControlType(typeof(DateTimePicker), WindowsFramework.Wpf.FrameworkId()).Single().ProgrammaticName, Is.EqualTo(ControlType.Custom.ProgrammaticName));
+            Assert.That(controlDictionary.GetControlType(typeof(DateTimePicker), WindowsFramework.WinForms.FrameworkId()).Single(), Is.EqualTo(ControlType.Pane));
+            Assert.That(controlDictionary.GetControlType(typeof(DateTimePicker), WindowsFramework.Wpf.FrameworkId()).Single(), Is.EqualTo(ControlType.Custom));
         }
     }
 }

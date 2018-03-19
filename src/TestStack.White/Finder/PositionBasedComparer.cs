@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.UIItems;
 
 namespace TestStack.White.Finder
@@ -9,8 +9,8 @@ namespace TestStack.White.Finder
     {
         public virtual int Compare(AutomationElement x, AutomationElement y)
         {
-            Rect rectX = x.Current.BoundingRectangle;
-            Rect rectY = y.Current.BoundingRectangle;
+            Rect rectX = x.BoundingRectangle;
+            Rect rectY = y.BoundingRectangle;
             return Compare(rectX, rectY);
         }
     }

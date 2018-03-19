@@ -1,4 +1,7 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.EventHandlers;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.Recording;
 using TestStack.White.UIItemEvents;
 using TestStack.White.UIItems.Actions;
@@ -7,7 +10,7 @@ namespace TestStack.White.UIItems.ListBoxItems
 {
     public class ListBox : ListControl
     {
-        private AutomationPropertyChangedEventHandler handler;
+        private IAutomationPropertyChangedEventHandler handler;
 
         protected ListBox() {}
         public ListBox(AutomationElement automationElement, IActionListener actionListener) : base(automationElement, actionListener) {}
@@ -34,17 +37,17 @@ namespace TestStack.White.UIItems.ListBoxItems
 
         public override void HookEvents(IUIItemEventListener eventListener)
         {
-            handler = delegate(object sender, AutomationPropertyChangedEventArgs e)
-                          {
-                              if (e.NewValue.Equals(1)) return;
-                              eventListener.EventOccured(new ListBoxEvent(this, SelectedItemText));
-                          };
-            Automation.AddAutomationPropertyChangedEventHandler(automationElement, TreeScope.Descendants, handler, SelectionItemPattern.IsSelectedProperty);
+            handler = automationElement.RegisterPropertyChangedEvent(
+                TreeScope.Descendants, (sender, _, value) =>
+                {
+                    if (value.Equals(1)) return;
+                    eventListener.EventOccured(new ListBoxEvent(this, SelectedItemText));
+                }, SelectionItemPattern.IsSelectedProperty);
         }
 
         public override void UnHookEvents()
         {
-            Automation.RemoveAutomationPropertyChangedEventHandler(automationElement, handler);
+            automationElement.RemovePropertyChangedEventHandler(handler);
         }
     }
 }

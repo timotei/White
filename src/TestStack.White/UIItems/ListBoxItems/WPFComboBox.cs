@@ -1,5 +1,6 @@
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.UIItems.Scrolling;
 
@@ -24,7 +25,7 @@ namespace TestStack.White.UIItems.ListBoxItems
                 var bounds = Bounds;
                 var firstVisibleItem = (Items.FirstOrDefault(i=>!i.IsOffScreen) ?? Items[0]).Bounds;
                 var lastItem = Items[Items.Count - 1].Bounds;
-                var verticalViewSize = scrollPattern.Current.VerticalViewSize;
+                var verticalViewSize = scrollPattern.VerticalViewSize;
                 var calculator = new WPFComboBoxVerticalSpanCalculator(bounds, firstVisibleItem, lastItem, verticalViewSize);
                 return calculator.VerticalSpan;
             }

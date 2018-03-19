@@ -2,7 +2,8 @@ using System;
 using NUnit.Framework;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.Configuration;
 using TestStack.White.Factory;
 using TestStack.White.UIItems;
@@ -100,7 +101,7 @@ namespace TestStack.White.UITests
                 Assert.That(() => { MainWindow.Get<TextBox>("HiddenTextBox"); },
                     Throws.TypeOf<AutomationException>().With.Message.EqualTo(
                         String.Format("Failed to get (ControlType={0} or ControlType={1}),AutomationId=HiddenTextBox",
-                            ControlType.Edit.LocalizedControlType, ControlType.Document.LocalizedControlType)));
+                            ControlType.Edit, ControlType.Document)));
             }
 
             MainWindow.Get<Button>("ShowHiddenTextBox").Click();
@@ -229,7 +230,7 @@ namespace TestStack.White.UITests
             Assert.That(() => { MainWindow.Get<TextBox>("DoesntExist"); },
                 Throws.TypeOf<AutomationException>().
                     With.Message.Contains("Failed to get").
-                    And.Message.Contains(String.Format("ControlType={0}", ControlType.Edit.LocalizedControlType)).
+                    And.Message.Contains(String.Format("ControlType={0}", ControlType.Edit)).
                     And.Message.Contains("AutomationId=DoesntExist"));
         }
 

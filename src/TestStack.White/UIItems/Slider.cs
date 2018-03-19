@@ -1,5 +1,6 @@
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.Factory;
 using TestStack.White.Sessions;
 using TestStack.White.UIItems.Actions;
@@ -20,18 +21,18 @@ namespace TestStack.White.UIItems
 
         public virtual double Value
         {
-            get { return RangePattern().Current.Value; }
+            get { return RangePattern().Value; }
             set { RangePattern().SetValue(value); }
         }
 
         public virtual double Maximum
         {
-            get { return RangePattern().Current.Maximum; }
+            get { return RangePattern().Maximum; }
         }
 
         public virtual double Minimum
         {
-            get { return RangePattern().Current.Minimum; }
+            get { return RangePattern().Minimum; }
         }
 
         private RangeValuePattern RangePattern()
@@ -54,12 +55,12 @@ namespace TestStack.White.UIItems
 
         public virtual double LargeChangeAmount
         {
-            get { return RangePattern().Current.LargeChange; }
+            get { return RangePattern().LargeChange; }
         }
 
         public virtual double SmallChangeAmount
         {
-            get { return RangePattern().Current.SmallChange; }
+            get { return RangePattern().SmallChange; }
         }
 
         public virtual void SmallIncrement()

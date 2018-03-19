@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems;
@@ -92,7 +93,7 @@ namespace TestStack.White.Factory
             List<AutomationElement> descendants = Finder.Descendants(AutomationSearchCondition.All);
             foreach (AutomationElement automationElement in descendants)
             {
-                if (!bounds.Contains(automationElement.Current.BoundingRectangle)) continue;
+                if (!bounds.Contains(automationElement.BoundingRectangle)) continue;
 
                 var factory = new DictionaryMappedItemFactory();
                 collection.Add(factory.Create(automationElement, actionListener));

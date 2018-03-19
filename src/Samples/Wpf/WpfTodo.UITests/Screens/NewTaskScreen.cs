@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.ScreenObjects;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
@@ -32,7 +33,7 @@ namespace WpfTodo.UITests.Screens
             get
             {
                 var uiItem = Window.Get(SearchCriteria.ByAutomationId("DueDate"));
-                var currentPropertyValue = uiItem.AutomationElement.GetCurrentPropertyValue(ValuePattern.ValueProperty);
+                var currentPropertyValue = uiItem.AutomationElement.BasicAutomationElement.GetPropertyValue(ValuePattern.ValueProperty);
                 return (DateTime)currentPropertyValue;
             }
             set

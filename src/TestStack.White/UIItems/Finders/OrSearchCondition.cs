@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Conditions;
 
 namespace TestStack.White.UIItems.Finders
 {
@@ -22,7 +23,7 @@ namespace TestStack.White.UIItems.Finders
             return simpleSearchConditions.Any(c => c.Satisfies(element));
         }
 
-        public override Condition AutomationCondition
+        public override ConditionBase AutomationCondition
         {
             get { return new OrCondition(simpleSearchConditions.Select(c => c.AutomationCondition).ToArray()); }
         }

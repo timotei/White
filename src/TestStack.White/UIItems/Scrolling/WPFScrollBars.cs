@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Identifiers;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.UIItems.Actions;
 
 namespace TestStack.White.UIItems.Scrolling
@@ -19,7 +21,7 @@ namespace TestStack.White.UIItems.Scrolling
         {
             get
             {
-                var patterns = new Collection<AutomationPattern>(parentElement.GetSupportedPatterns());
+                var patterns = new Collection<PatternId>(parentElement.GetSupportedPatterns());
                 return patterns.Contains(ScrollPattern.Pattern)
                            ? (IHScrollBar)new WpfHScrollBar(parentElement, actionListener)
                            : new NullHScrollBar();
@@ -30,7 +32,7 @@ namespace TestStack.White.UIItems.Scrolling
         {
             get
             {
-                var patterns = new Collection<AutomationPattern>(parentElement.GetSupportedPatterns());
+                var patterns = new Collection<PatternId>(parentElement.GetSupportedPatterns());
                 return patterns.Contains(ScrollPattern.Pattern)
                            ? (IVScrollBar)new WpfVScrollBar(parentElement, actionListener)
                            : new NullVScrollBar();

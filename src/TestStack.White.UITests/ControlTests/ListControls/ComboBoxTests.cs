@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
@@ -51,7 +53,7 @@ namespace TestStack.White.UITests.ControlTests.ListControls
         public void ComboBoxOnlyCollapsesWhenExpansionWasForItemRetrievalTest()
         {
             // Arrange
-            var expandCollapsePattern = (ExpandCollapsePattern)ComboBoxUnderTest.AutomationElement.GetCurrentPattern(ExpandCollapsePattern.Pattern);
+            var expandCollapsePattern = (ExpandCollapsePattern)ComboBoxUnderTest.AutomationElement.Patterns.ExpandCollapse.PatternOrDefault;
             var config = CoreAppXmlConfiguration.Instance;
             var originalVal = config.ComboBoxItemsPopulatedWithoutDropDownOpen;
             config.ComboBoxItemsPopulatedWithoutDropDownOpen = false;
@@ -67,7 +69,7 @@ namespace TestStack.White.UITests.ControlTests.ListControls
 #pragma warning restore 168
 
                 // Assert
-                var expansionState = expandCollapsePattern.Current.ExpandCollapseState;
+                var expansionState = expandCollapsePattern.ExpandCollapseState;
                 Assert.That(expansionState, Is.EqualTo(ExpandCollapseState.Expanded));
             }
             finally
@@ -94,7 +96,7 @@ namespace TestStack.White.UITests.ControlTests.ListControls
 #pragma warning restore 168
 
                 // Assert
-                var expansionState = (ExpandCollapseState)ComboBoxUnderTest.AutomationElement.GetCurrentPropertyValue(ExpandCollapsePattern.ExpandCollapseStateProperty);
+                var expansionState = (ExpandCollapseState)ComboBoxUnderTest.AutomationElement.BasicAutomationElement.GetPropertyValue(ExpandCollapsePattern.ExpandCollapseStateProperty);
                 // The combobox should have been collapsed after the items were retrieved
                 Assert.That(expansionState, Is.EqualTo(ExpandCollapseState.Collapsed));
             }

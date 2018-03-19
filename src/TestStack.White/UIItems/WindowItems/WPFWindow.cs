@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.Factory;
 using TestStack.White.Sessions;
 using TestStack.White.UIItems.Finders;
@@ -27,7 +27,7 @@ namespace TestStack.White.UIItems.WindowItems
         public override Window ModalWindow(string title, InitializeOption option)
         {
             WindowFactory desktopWindowsFactory = WindowFactory.Desktop;
-            return desktopWindowsFactory.FindModalWindow(title, Process.GetProcessById(automationElement.Current.ProcessId), option, automationElement,
+            return desktopWindowsFactory.FindModalWindow(title, Process.GetProcessById(automationElement.Properties.ProcessId), option, automationElement,
                                                          WindowSession.ModalWindowSession(option));
         }
 

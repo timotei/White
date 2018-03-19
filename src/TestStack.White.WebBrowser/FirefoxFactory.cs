@@ -1,4 +1,4 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using TestStack.White.Factory;
 using TestStack.White.Sessions;
 using TestStack.White.UIItems.WindowItems;
@@ -14,7 +14,7 @@ namespace TestStack.White.WebBrowser
 
         public virtual bool DoesSpecializeInThis(AutomationElement windowElement)
         {
-            return windowElement.Current.ClassName.Contains("MozillaUIWindowClass");
+            return windowElement.ClassName.Contains("MozillaUIWindowClass");
         }
 
         public virtual Window Create(AutomationElement automationElement, InitializeOption initializeOption, WindowSession session)

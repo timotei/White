@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.ListBoxItems;
 
@@ -29,7 +30,7 @@ namespace TestStack.White.UITests.ControlTests.ListControls
             var listBoxUnderTest = MainWindow.Get<ListBox>("CheckedListBox");
             Assert.That(listBoxUnderTest.IsChecked("Item2"), Is.False);
             var item = listBoxUnderTest.Item("Item2");
-            ((SelectionItemPattern)item.AutomationElement.GetCurrentPattern(SelectionItemPattern.Pattern)).Select();
+            item.AutomationElement.Patterns.SelectionItem.Pattern.Select();
             listBoxUnderTest.Check("Item2");
             Assert.That(listBoxUnderTest.IsChecked("Item2"), Is.True);
         }

@@ -1,7 +1,9 @@
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Conditions;
+using FlaUI.Core.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Automation;
 
 namespace TestStack.White.AutomationElementSearch
 {
@@ -20,7 +22,7 @@ namespace TestStack.White.AutomationElementSearch
             return Descendant(automationSearchCondition.Condition);
         }
 
-        public virtual AutomationElement Descendant(Condition condition)
+        public virtual AutomationElement Descendant(ConditionBase condition)
         {
             return automationElement.FindFirst(TreeScope.Descendants, condition);
         }

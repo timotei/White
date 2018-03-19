@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems.Actions;
@@ -19,7 +20,7 @@ namespace TestStack.White.UIItems.TableItems
                 var descendants = new AutomationElementFinder(automationElement)
                     .Descendants(AutomationSearchCondition.ByControlType(ControlType.Header));
                 var columnElements = new List<AutomationElement>(descendants)
-                    .FindAll(obj => !obj.Current.Name.StartsWith(UIItemIdAppXmlConfiguration.Instance.TableColumn));
+                    .FindAll(obj => !obj.Name.StartsWith(UIItemIdAppXmlConfiguration.Instance.TableColumn));
                 return new TableColumns(columnElements, actionListener);
             }
         }

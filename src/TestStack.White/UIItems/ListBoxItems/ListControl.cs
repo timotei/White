@@ -1,5 +1,7 @@
 using System.Threading;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems.Actions;
@@ -40,10 +42,10 @@ namespace TestStack.White.UIItems.ListBoxItems
 
             object expandCollapse;
 
-            if (!AutomationElement.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out expandCollapse)) return;
+            if (!AutomationElement.BasicAutomationElement.TryGetNativePattern(ExpandCollapsePattern.Pattern, out expandCollapse)) return;
 
             var state = (ExpandCollapseState) automationElement
-                .GetCurrentPropertyValue(ExpandCollapsePattern.ExpandCollapseStateProperty);
+                .BasicAutomationElement.GetPropertyValue(ExpandCollapsePattern.ExpandCollapseStateProperty);
             if (state == ExpandCollapseState.Collapsed)
             {
                 ((ExpandCollapsePattern)expandCollapse).Expand();

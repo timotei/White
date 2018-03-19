@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.UIA;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.Utility;
@@ -40,7 +41,7 @@ namespace TestStack.White.UIItems.ListBoxItems
             {
                 Logger.Debug("Bounds empty, falling back to automation patterns");
                 var selectionItemPattern =
-                    (SelectionItemPattern) automationElement.GetCurrentPattern(SelectionItemPattern.Pattern);
+                    (SelectionItemPattern) automationElement.Patterns.SelectionItem.Pattern;
                 selectionItemPattern.Select();
             }
             else
@@ -51,7 +52,7 @@ namespace TestStack.White.UIItems.ListBoxItems
                 if (!IsSelected)
                 {
                     Logger.Debug("Failed to select list item via click. Falling back to automation patterns");
-                    ((SelectionItemPattern)automationElement.GetCurrentPattern(SelectionItemPattern.Pattern)).Select();
+                    automationElement.Patterns.SelectionItem.PatternOrDefault.Select();
                 }
             }
 

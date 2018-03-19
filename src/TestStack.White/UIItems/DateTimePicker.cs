@@ -1,5 +1,6 @@
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Patterns;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.WindowsAPI;
@@ -15,7 +16,7 @@ namespace TestStack.White.UIItems
         {
             get
             {
-                var property = (string) Property(ValuePattern.ValueProperty);
+                var property = AutomationElement.Patterns.Value.PatternOrDefault?.Value;
                 if (string.IsNullOrEmpty(property))
                     return null;
                 return DateTime.Parse(property);

@@ -1,5 +1,6 @@
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.UIItems.Actions;
 
 namespace TestStack.White.UIItems.Scrolling
@@ -17,12 +18,12 @@ namespace TestStack.White.UIItems.Scrolling
 
         public override double Value
         {
-            get { return ScrollPattern.Current.HorizontalScrollPercent; }
+            get { return ScrollPattern.HorizontalScrollPercent; }
         }
 
         protected override double ScrollPercentage
         {
-            get { return ScrollPattern.Current.HorizontalViewSize; }
+            get { return ScrollPattern.HorizontalViewSize; }
         }
 
         public override Rect Bounds
@@ -37,23 +38,23 @@ namespace TestStack.White.UIItems.Scrolling
             {
                 case ScrollAmount.LargeDecrement:
                     ScrollPattern.SetScrollPercent(
-                        ValidPercentage(ScrollPattern.Current.HorizontalScrollPercent - ScrollPercentage),
-                        ScrollPattern.Current.VerticalScrollPercent);
+                        ValidPercentage(ScrollPattern.HorizontalScrollPercent - ScrollPercentage),
+                        ScrollPattern.VerticalScrollPercent);
                     break;
                 case ScrollAmount.SmallDecrement:
                     ScrollPattern.SetScrollPercent(
-                        ValidPercentage(ScrollPattern.Current.HorizontalScrollPercent - SmallPercentage()),
-                        ScrollPattern.Current.VerticalScrollPercent);
+                        ValidPercentage(ScrollPattern.HorizontalScrollPercent - SmallPercentage()),
+                        ScrollPattern.VerticalScrollPercent);
                     break;
                 case ScrollAmount.LargeIncrement:
                     ScrollPattern.SetScrollPercent(
-                        ValidPercentage(ScrollPattern.Current.HorizontalScrollPercent + ScrollPercentage),
-                        ScrollPattern.Current.VerticalScrollPercent);
+                        ValidPercentage(ScrollPattern.HorizontalScrollPercent + ScrollPercentage),
+                        ScrollPattern.VerticalScrollPercent);
                     break;
                 case ScrollAmount.SmallIncrement:
                     ScrollPattern.SetScrollPercent(
-                        ValidPercentage(ScrollPattern.Current.HorizontalScrollPercent + SmallPercentage()),
-                        ScrollPattern.Current.VerticalScrollPercent);
+                        ValidPercentage(ScrollPattern.HorizontalScrollPercent + SmallPercentage()),
+                        ScrollPattern.VerticalScrollPercent);
                     break;
             }
             actionListener.ActionPerformed(Action.WindowMessage);
@@ -81,17 +82,17 @@ namespace TestStack.White.UIItems.Scrolling
 
         public virtual bool IsScrollable
         {
-            get { return ScrollPattern.Current.HorizontallyScrollable; }
+            get { return ScrollPattern.HorizontallyScrollable; }
         }
 
         public override void SetToMinimum()
         {
-            ScrollPattern.SetScrollPercent(0, ScrollPattern.Current.VerticalScrollPercent);
+            ScrollPattern.SetScrollPercent(0, ScrollPattern.VerticalScrollPercent);
         }
 
         public override void SetToMaximum()
         {
-            ScrollPattern.SetScrollPercent(100, ScrollPattern.Current.VerticalScrollPercent);
+            ScrollPattern.SetScrollPercent(100, ScrollPattern.VerticalScrollPercent);
         }
     }
 }

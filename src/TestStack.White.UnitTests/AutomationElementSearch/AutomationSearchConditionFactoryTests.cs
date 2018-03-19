@@ -1,5 +1,6 @@
 using NUnit.Framework;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Conditions;
 using TestStack.White.AutomationElementSearch;
 
 namespace TestStack.White.UnitTests.AutomationElementSearch

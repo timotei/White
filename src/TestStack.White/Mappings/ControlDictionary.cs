@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Custom;
 using TestStack.White.UIItems.ListBoxItems;
@@ -104,7 +105,7 @@ namespace TestStack.White.Mappings
         {
             if (controlType.Equals(ControlType.Custom)) return true;
             var results = items.FindBy(controlType).ToArray();
-            if (!results.Any()) throw new ControlDictionaryException("Could not find control of type " + controlType.LocalizedControlType);
+            if (!results.Any()) throw new ControlDictionaryException("Could not find control of type " + controlType);
             return results.Any(i => i.HasPrimaryChildren);
         }
 
@@ -136,7 +137,7 @@ namespace TestStack.White.Mappings
             if (!dictionaryItems.Any())
             {
                 throw new ControlDictionaryException(string.Format("Could not find TestControl for ControlType={0} and FrameworkId:{1}",
-                                                                   controlType.LocalizedControlType, frameWorkId));
+                                                                   controlType, frameWorkId));
             }
             if (dictionaryItems.Length > 1)
             {
@@ -156,7 +157,7 @@ namespace TestStack.White.Mappings
 
                 throw new ControlDictionaryException(string.Format(
                    "Multiple TestControls found for ControlType={0} and FrameworkId:{1} - {2}",
-                   controlType.LocalizedControlType, frameWorkId,
+                   controlType, frameWorkId,
                    string.Join(", ", dictionaryItems.Select(d => d.TestControlType == null ? "null" : d.TestControlType.FullName))));
 
             }
@@ -215,17 +216,17 @@ namespace TestStack.White.Mappings
 
         public virtual Type GetTestControlType(AutomationElement automationElement)
         {
-            TreeWalker tWalker = TreeWalker.ControlViewWalker;
-            AutomationElement.AutomationElementInformation current = automationElement.Current;
+            var tWalker = Desktop.Automation.TreeWalkerFactory.GetControlViewWalker();
+            AutomationElement current = automationElement;
             AutomationElement parent = tWalker.GetParent(automationElement);
-            String frameId = current.FrameworkId;
+            var frameId = current.Properties.FrameworkId;
             while (string.IsNullOrEmpty(frameId) || tWalker.GetParent(parent) != null)
             {
-                frameId = parent.Current.FrameworkId;
+                frameId = parent.Properties.FrameworkId;
                 parent = tWalker.GetParent(parent);
             }
 
-            return GetTestControlType(current.ClassName, current.Name, current.ControlType, frameId, current.NativeWindowHandle != 0);
+            return GetTestControlType(current.ClassName, current.Name, current.ControlType, frameId, current.Properties.NativeWindowHandle != IntPtr.Zero);
         }
     }
 }

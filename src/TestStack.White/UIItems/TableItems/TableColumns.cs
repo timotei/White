@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.UIA3.Identifiers;
 using TestStack.White.Configuration;
 using TestStack.White.Factory;
 using TestStack.White.UIItems.Actions;
@@ -21,7 +22,7 @@ namespace TestStack.White.UIItems.TableItems
 
         private static bool HeaderColumn(AutomationElement automationElement)
         {
-            return automationElement.GetCurrentPropertyValue(AutomationElement.NameProperty).Equals(UIItemIdAppXmlConfiguration.Instance.TableTopLeftHeaderCell);
+            return automationElement.BasicAutomationElement.GetPropertyValue(AutomationObjectIds.NameProperty).Equals(UIItemIdAppXmlConfiguration.Instance.TableTopLeftHeaderCell);
         }
 
         public virtual TableColumn this[string text]

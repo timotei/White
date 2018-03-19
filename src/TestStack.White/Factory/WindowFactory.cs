@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
 using Castle.Core.Logging;
+using FlaUI.Core.Definitions;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.Configuration;
 using TestStack.White.Sessions;
@@ -23,7 +24,7 @@ namespace TestStack.White.Factory
 
         public static WindowFactory Desktop
         {
-            get { return new WindowFactory(new AutomationElementFinder(AutomationElement.RootElement)); }
+            get { return new WindowFactory(new AutomationElementFinder(White.Desktop.Instance.AutomationElement)); }
         }
 
         public virtual PopUpMenu PopUp(IActionListener actionListener)
@@ -128,12 +129,12 @@ namespace TestStack.White.Factory
             var elements = FindAllWindowElements(process);
             return elements.Find(automationElement =>
             {
-                if (match.Invoke(automationElement.Current.Name)) return true;
+                if (match.Invoke(automationElement.Name)) return true;
 
                 AutomationElement titleBarElement =
                     new AutomationElementFinder(automationElement).Child(AutomationSearchCondition.ByControlType(ControlType.TitleBar));
                 if (titleBarElement == null) return false;
-                return match.Invoke(titleBarElement.Current.Name);
+                return match.Invoke(titleBarElement.Name);
             });
         }
 

@@ -1,4 +1,5 @@
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.AutomationElementSearch;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.UIItems.Finders;
@@ -44,7 +45,7 @@ namespace TestStack.White.UIItems.ListBoxItems
             {
                 AutomationElement element = finder.FindChildRaw(AutomationSearchCondition.ByControlType(ControlType.Text));
                 if (element == null) return base.Text;
-                return element.Current.Name;
+                return element.Name;
             }
         }
     }

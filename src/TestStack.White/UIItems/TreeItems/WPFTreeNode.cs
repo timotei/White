@@ -1,5 +1,6 @@
 using System.Windows;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.UIA;
 using TestStack.White.UIItems.Actions;
 using TestStack.White.UIItems.Finders;

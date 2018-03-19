@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
-using System.Windows.Automation;
+using FlaUI.Core.AutomationElements.Infrastructure;
+using FlaUI.Core.Definitions;
 using TestStack.White.Configuration;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
@@ -55,7 +56,7 @@ namespace TestStack.White.UITests.ControlTests.ListControls
             {
                 Assert.That(() => { listItem.Get<TextBox>(SearchCriteria.ByAutomationId("foo")); },
                     Throws.TypeOf<AutomationException>().With.Message.EqualTo(
-                        String.Format("Failed to get ControlType={0},AutomationId=foo", ControlType.Edit.LocalizedControlType)));
+                        String.Format("Failed to get ControlType={0},AutomationId=foo", ControlType.Edit)));
             }
         }
 
